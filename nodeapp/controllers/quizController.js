@@ -331,8 +331,8 @@ if (quiz.isProtected) {
         score,
         totalMarks,
         tabSwitches || 0,
-        cameraRecording,
-        screenRecording
+        null,
+        null
       )
 
       .then(() => {
