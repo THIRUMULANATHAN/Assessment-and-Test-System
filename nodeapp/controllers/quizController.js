@@ -155,18 +155,18 @@ ATS Automated Proctoring System
 
   if (hasSMTPConfig) {
     transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT),
-      secure: process.env.SMTP_SECURE === "true",
-      // Required fix for Render Gmail SMTP IPv6 issue
-      family: 4,
+
+      service: "gmail",
+
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS.replace(/\s/g, "")
       },
-      tls: {
-        rejectUnauthorized: false
-      }
+
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 15000
+
     });
   } else {
     // Write to local proctoring email log file
@@ -187,6 +187,7 @@ ATTACHMENTS ATTACHED: ${mailOptions.attachments.length} files (Cam: ${camRec ? '
   }
 
   try {
+    console.log("📨 Sending mail using Gmail SMTP...");
     await transporter.sendMail(mailOptions);
     console.log(`✅ Proctor email sent successfully to ${teacherEmail}`);
   } catch (error) {
