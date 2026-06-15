@@ -34,35 +34,33 @@ app.use(morgan("dev"));
 
 
 // ==========================
-// CORS Configuration
+// CORS (OPEN)
 // ==========================
 
 app.use(
   cors({
     origin: true,
     credentials: true,
+
     methods: [
       "GET",
       "POST",
       "PUT",
       "PATCH",
       "DELETE",
-      "OPTIONS"
+      "OPTIONS",
     ],
+
     allowedHeaders: [
       "Content-Type",
-      "Authorization"
-    ]
+      "Authorization",
+    ],
   })
 );
 
 
-// handle browser preflight
-app.options("*", cors());
-
-
 // ==========================
-// Static uploads
+// Static Uploads
 // ==========================
 
 app.use(
@@ -96,15 +94,28 @@ mongoose
 // Routes
 // ==========================
 
+
+// New correct API routes
 app.use(
   "/api/auth",
   require("./routes/authRoutes")
 );
 
+
+// Old frontend compatibility
+// fixes /auth/register issue
+app.use(
+  "/auth",
+  require("./routes/authRoutes")
+);
+
+
+
 app.use(
   "/api/quizzes",
   require("./routes/quizRoutes")
 );
+
 
 app.use(
   "/api/users",
@@ -112,22 +123,31 @@ app.use(
 );
 
 
+
 // ==========================
 // Health Check
 // ==========================
 
 app.get("/", (req, res) => {
-  res.status(200).send(
-    "Assessment & Test System API running 🚀"
-  );
+  res
+    .status(200)
+    .send(
+      "Assessment & Test System API running 🚀"
+    );
 });
 
+
+
+// ==========================
+// Swagger
+// ==========================
 
 // swaggerDocs(app);
 
 
+
 // ==========================
-// 404
+// 404 Handler
 // ==========================
 
 app.use((req, res) => {
@@ -137,8 +157,9 @@ app.use((req, res) => {
 });
 
 
+
 // ==========================
-// Server
+// Server Start
 // ==========================
 
 const PORT =
