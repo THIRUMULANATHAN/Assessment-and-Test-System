@@ -156,16 +156,22 @@ ATS Automated Proctoring System
   if (hasSMTPConfig) {
     transporter = nodemailer.createTransport({
 
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
 
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS.replace(/\s/g, "")
       },
 
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-      socketTimeout: 15000
+      tls: {
+        rejectUnauthorized: false
+      },
+
+      connectionTimeout: 30000,
+      greetingTimeout: 30000,
+      socketTimeout: 30000
 
     });
   } else {
