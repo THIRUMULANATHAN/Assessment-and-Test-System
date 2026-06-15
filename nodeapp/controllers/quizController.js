@@ -270,22 +270,50 @@ exports.submitQuiz = async (req, res) => {
       proctoringViolated: (tabSwitches || 0) >= 3
     });
 
+// ------------------ SEND PROCTOR MAIL ------------------
 
-// Send mail only for protected quizzes
 if (quiz.isProtected) {
-  console.log(
-    "Protected status:",
-    quiz.isProtected
-  );
+
+  console.log("🔒 Protected status:", quiz.isProtected);
+
   try {
+
+    console.log("📸 Starting proctor mail process");
 
     const student = await User.findById(userId);
     const teacher = await User.findById(quiz.createdBy);
 
+
+    console.log(
+      "👨‍🎓 Student:",
+      student?.username
+    );
+
+    console.log(
+      "👨‍🏫 Teacher:",
+      teacher?.username
+    );
+
+
+    console.log(
+      "📷 Camera Recording:",
+      cameraRecording ? "YES" : "NO"
+    );
+
+    console.log(
+      "🖥 Screen Recording:",
+      screenRecording ? "YES" : "NO"
+    );
+
+
     if (!student || !teacher) {
-      console.log("⚠️ Student or teacher missing. Mail skipped.");
-    }
-    else {
+
+      console.log(
+        "⚠️ Student or teacher missing. Mail skipped."
+      );
+
+    } else {
+
 
       sendProctoringEmail(
         student.username,
@@ -297,19 +325,27 @@ if (quiz.isProtected) {
         cameraRecording,
         screenRecording
       )
+
       .then(() => {
+
         console.log(
-          `✅ Background mail completed`
+          `✅ Background mail completed successfully`
         );
+
       })
+
       .catch((err) => {
+
         console.error(
           "❌ Background mail failed:",
           err.message
         );
+
       });
 
+
     }
+
 
   } catch(error) {
 
@@ -319,6 +355,7 @@ if (quiz.isProtected) {
     );
 
   }
+
 
 }
 
