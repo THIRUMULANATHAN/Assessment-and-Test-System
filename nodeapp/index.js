@@ -17,7 +17,11 @@ const app = express();
 // Middlewares
 // ==========================
 
-app.use(express.json({ limit: "200mb" }));
+app.use(
+  express.json({
+    limit: "200mb",
+  })
+);
 
 app.use(
   express.urlencoded({
@@ -30,16 +34,6 @@ app.use(morgan("dev"));
 
 
 // ==========================
-// Static Upload Folder
-// ==========================
-
-app.use(
-  "/uploads",
-  express.static(path.join(__dirname, "uploads"))
-);
-
-
-// ==========================
 // CORS Configuration
 // ==========================
 
@@ -48,8 +42,6 @@ const allowedOrigins = [
   "http://localhost:5174",
   "http://127.0.0.1:5173",
   "http://127.0.0.1:5174",
-
-  // Production frontend
   "https://assessment-and-test-system.vercel.app",
 ];
 
@@ -58,30 +50,33 @@ app.use(
   cors({
     origin: function (origin, callback) {
 
-      // allow postman/server requests
+      // Postman/mobile apps
       if (!origin) {
         return callback(null, true);
       }
 
+      // allow production + preview vercel urls
       if (
         allowedOrigins.includes(origin) ||
-        origin.startsWith("http://localhost:") ||
-        origin.startsWith("http://127.0.0.1:")
+        origin.endsWith(".vercel.app")
       ) {
         return callback(null, true);
       }
 
       return callback(
-        new Error(`CORS blocked for origin: ${origin}`)
+        new Error(
+          `Blocked by CORS: ${origin}`
+        )
       );
     },
+
 
     methods: [
       "GET",
       "POST",
       "PUT",
-      "DELETE",
       "PATCH",
+      "DELETE",
       "OPTIONS",
     ],
 
@@ -95,21 +90,39 @@ app.use(
 );
 
 
+// handle browser preflight
+app.options("*", cors());
+
+
 // ==========================
-// MongoDB Connection
+// Static uploads
+// ==========================
+
+app.use(
+  "/uploads",
+  express.static(
+    path.join(__dirname, "uploads")
+  )
+);
+
+
+// ==========================
+// MongoDB
 // ==========================
 
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() =>
-    console.log("✅ MongoDB Connected")
-  )
-  .catch((err) =>
-    console.error(
+  .then(() => {
+    console.log(
+      "✅ MongoDB Connected"
+    );
+  })
+  .catch((err) => {
+    console.log(
       "❌ MongoDB Error:",
       err.message
-    )
-  );
+    );
+  });
 
 
 // ==========================
@@ -133,25 +146,21 @@ app.use(
 
 
 // ==========================
-// Root Test Route
+// Health Check
 // ==========================
 
 app.get("/", (req, res) => {
-  res.send(
+  res.status(200).send(
     "Assessment & Test System API running 🚀"
   );
 });
 
 
-// ==========================
-// Swagger
-// ==========================
-
 // swaggerDocs(app);
 
 
 // ==========================
-// 404 Handler
+// 404
 // ==========================
 
 app.use((req, res) => {
@@ -162,10 +171,12 @@ app.use((req, res) => {
 
 
 // ==========================
-// Server Start
+// Server
 // ==========================
 
-const PORT = process.env.PORT || 8080;
+const PORT =
+  process.env.PORT || 8080;
+
 
 app.listen(PORT, () => {
   console.log(
