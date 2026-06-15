@@ -1,200 +1,387 @@
-# ATS Assessment Suite
+# 🛡️ ATS - Assessment & Test System
 
-An advanced, proctor-secured assessment portal designed for academic testing and professional evaluations. The suite features a dual-interface architecture tailored for **Students** (test-takers) and **Teachers/Admins** (test-creators), backed by real-time automated proctoring (camera tracking and tab lockouts), robust performance analytics, and SMTP notifications.
+<div align="center">
 
----
+### Advanced AI-Ready Online Examination Platform with Automated Proctoring
 
-## 🚀 Key Features
+A full-stack MERN assessment portal that enables secure online exams with webcam monitoring, tab-switch detection, automated violation tracking, analytics dashboards, and email-based proctoring reports.
 
-### 💻 Student Experience & Testing Sandbox
-* **Dynamic Quiz Library**: Explore published tests, filter by subject tags, and keyword search quizzes.
-* **Secured Testing Sandbox**: Take quizzes with an integrated countdown timer, visual warning logs, and dynamic choice selectors.
-* **Practice Mode**: Unprotected tests permit practice runs where students can instantly verify their responses during the quiz.
+<br/>
 
-### 🛡️ Automated Proctoring & Tab Lock System
-* **Pre-Test Device Verification**: Interactive setup wizard validating camera access and screen-sharing permissions.
-* **Webcam & Tab Guard**: 
-  * Strict tracking of active tabs (blur detection) and fullscreen locks.
-  * Attempting to minimize the browser, exit fullscreen, or switch tabs locks the assessment screen with a high-priority warning blocker.
-* **Automated Video Logs**: Captures proctoring streams, compresses files, and automatically emails the base64 recording log directly to the quiz creator upon submission or early termination.
+🚀 **Live Demo:**  
+https://assessment-and-test-system.vercel.app/
 
-### 📊 Instructor Command Center & Analytics
-* **Rich Dashboard**: At-a-glance telemetry tracking total users, published assessments, test attempts, average scores, and accuracy percentages.
-* **Assessment Builder**: Complete editor to build multiple-choice questions, select difficulty tiers, set custom countdown limits, and toggle secure proctoring access.
-* **Granular Reports**: Interactive accordion views showing individual student profiles, score progress bars, date timestamps, and access to proctoring records.
+</div>
 
 ---
 
-## 🧠 Engineering Highlights (Placement Showcase)
+## 📸 Application Preview
 
-### 1. Overcoming the MongoDB 16MB BSON Document Limit
-* **The Challenge**: Storing video streams directly inside MongoDB as base64 strings quickly exceeded the standard 16MB BSON document limit for any test lasting more than a few seconds. This led to fatal database exceptions and quiz submission failures.
-* **The Architecture Solution**: Re-engineered the submission pipeline. The backend now decodes the incoming base64 streams, saves them as static `.webm` files on the server (`nodeapp/uploads/`), and stores a lightweight static path string in MongoDB.
-* **The Result**: Result document sizes were reduced from megabytes to under 2KB. This secured the database, increased performance, and enabled static playback streaming via HTTP.
+### Authentication System
+![Register](screenshots/01Register.png)
 
-### 2. High-Performance Payload Handling
-* Adjusted backend Express JSON parsers to process up to `200mb` payloads, allowing students to submit longer assessments with higher resolution proctoring feeds without experiencing `413 Payload Too Large` restrictions.
+![Login](screenshots/02Login.png)
 
 ---
 
-## 📂 Project Structure Directory Blueprint
+### Student Dashboard
+
+![Dashboard](screenshots/03Dashboard.png)
+
+---
+
+### Quiz Library
+
+![Quiz Library](screenshots/04QuizLibrary.png)
+
+---
+
+### Secure Proctored Assessment
+
+![Protected Mode](screenshots/05Protcted.png)
+
+### Camera + Screen Monitoring
+
+![Recording](screenshots/06Screen_Cam-Recordings.png)
+
+### Violation Detection
+
+![Warning](screenshots/07Warning.png)
+
+---
+
+### Automated Email Reports
+
+![Mail Report](screenshots/08mail1.png)
+
+![Mail Attachment](screenshots/09mail2.png)
+
+---
+
+### Teacher Quiz Builder
+
+![Teacher Panel](screenshots/10teacher_set_question.png)
+
+
+---
+
+# 🚀 Features
+
+## 👨‍🎓 Student Module
+
+- Secure student authentication
+- Browse available assessments
+- Attempt quizzes with timer control
+- Instant practice mode validation
+- Score and accuracy tracking
+- Personal performance dashboard
+
+
+---
+
+## 🛡️ Automated Proctoring System
+
+The platform implements browser-level examination security.
+
+### Security Checks
+
+✔ Webcam permission validation  
+✔ Screen monitoring initialization  
+✔ Fullscreen enforcement  
+✔ Browser tab switching detection  
+✔ Window minimize detection  
+✔ Violation warning system  
+
+
+### Recording Workflow
 
 ```
-ATS/
-├── nodeapp/                 # Backend Node/Express Server
-│   ├── controllers/         # Request handlers (auth, quiz, user logic)
-│   ├── middleware/          # JWT tokens & role-based route guards
-│   ├── models/              # Mongoose/MongoDB Schemas (User, Quiz, Result)
-│   ├── routes/              # Express Router mapping to API endpoints
-│   ├── uploads/             # Server file storage for decoded proctoring videos
-│   ├── index.js             # Main server entrypoint (CORS, body-parsers)
-│   └── package.json
-│
-└── reactapp/
-    └── frontend/            # Client Frontend React Application
-        ├── public/
-        ├── src/
-        │   ├── api/         # Axios instance setup with auth header interceptors
-        │   ├── components/  # Core widgets (Layout, Auth login/register, Quiz builders)
-        │   ├── context/     # Global state provider for user sessions
-        │   ├── pages/       # View pages (Dashboard, Profile, NotFound)
-        │   ├── styles/      # Component specific styling rules
-        │   ├── App.jsx      # React router wrapper
-        │   └── main.jsx
-        ├── package.json
-        └── vite.config.js
+Camera Stream
+      ↓
+MediaRecorder API
+      ↓
+Video Blob Generation
+      ↓
+Backend Processing
+      ↓
+WEBM Storage
+      ↓
+Email Delivery
 ```
 
 ---
 
-## 🛠️ Technology Stack
+# 👨‍🏫 Teacher/Admin Module
 
-| Architecture Layer | Technology | Key Usage |
-| :--- | :--- | :--- |
-| **Frontend** | React (Vite) | Component-driven, responsive UI engine. |
-| **Routing** | React Router | Declarative client-side routing. |
-| **Styling** | Vanilla CSS | Custom design system using glassmorphism, Outfit/Jakarta typography, and orbit rotation keyframes. |
-| **Icons** | React Icons (FontAwesome) | Visual indicators and control system hooks. |
-| **Backend** | Node.js / Express | REST API server handling user authentication, quiz creation, and report generation. |
-| **Database** | MongoDB / Mongoose | Schema validation and storage for user states, assessments, and reports. |
-| **Email Logs** | Nodemailer / SMTP | Dynamic attachment processing to email proctoring reports to instructors. |
+### Assessment Management
+
+- Create MCQ assessments
+- Configure:
+  - Difficulty
+  - Duration
+  - Protected / Practice Mode
+- Publish quizzes
+- Remove assessments
+
+
+### Analytics Dashboard
+
+Tracks:
+
+- Total users
+- Total quizzes
+- Attempts
+- Average scores
+- Accuracy percentage
+- Student-wise reports
+
 
 ---
 
-## 📈 System Architecture
+# 🧠 Major Engineering Problem Solved
+
+
+## MongoDB 16MB BSON Limit Optimization
+
+
+### Problem
+
+Initially webcam recordings were stored directly as Base64 strings inside MongoDB.
+
+This caused:
+
+- Huge document sizes
+- Database failures
+- Slow queries
+- BSON limit exceptions
+
+
+### Solution Implemented
+
+Redesigned storage architecture:
+
+```
+Frontend Recording
+        |
+        |
+        V
+Express Backend
+        |
+        |
+ Decode Base64
+        |
+        |
+ Save .webm File
+        |
+        |
+ Store File URL in MongoDB
+```
+
+### Result
+
+🔥 Reduced database documents from MB size to KB size  
+🔥 Faster report loading  
+🔥 Scalable proctoring storage  
+
+
+---
+
+# 🏗️ System Architecture
+
 
 ```mermaid
 graph TD
-    A[React Frontend Client] -->|REST Requests + JWT| B[Express API Gateway]
-    B -->|Mongoose ODM| C[(MongoDB Database)]
-    B -->|FileSystem Write| D[Local Filesystem Uploads]
-    B -->|SMTP Transport| E[Nodemailer Mail Server]
-    E -->|Mime Video Attachments| F[Instructor Email Inbox]
+
+A[React Frontend] -->|JWT API Requests| B[Express Server]
+
+B --> C[(MongoDB)]
+
+B --> D[Video File Storage]
+
+B --> E[Nodemailer SMTP]
+
+E --> F[Teacher Email Report]
 ```
 
 ---
 
-## ⚙️ Installation & Setup
+# 🛠️ Tech Stack
 
-### Prerequisites
-* [Node.js](https://nodejs.org/) (v16+)
-* [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) or local MongoDB instance
 
-### 1. Repository Installation
-Clone the repository and enter the directory:
-```bash
-git clone https://github.com/THIRUMULANATHAN/ATS.git
-cd ATS
+| Layer | Technology |
+|-|-|
+| Frontend | React + Vite |
+| Styling | CSS3 |
+| Routing | React Router |
+| API Handling | Axios |
+| Backend | Node.js + Express.js |
+| Database | MongoDB + Mongoose |
+| Authentication | JWT |
+| Video Capture | MediaRecorder API |
+| Email Service | Nodemailer SMTP |
+| Deployment | Vercel |
+
+
+---
+
+# 📂 Folder Structure
+
+
+```text
+ATS
+│
+├── nodeapp
+│   ├── controllers
+│   ├── middleware
+│   ├── models
+│   ├── routes
+│   ├── uploads
+│   └── index.js
+│
+├── reactapp
+│   └── frontend
+│       ├── src
+│       │   ├── api
+│       │   ├── components
+│       │   ├── context
+│       │   └── pages
+│       │
+│       └── vite.config.js
+│
+├── screenshots
+│
+└── README.md
 ```
 
-### 2. Backend Configuration (`nodeapp`)
-Navigate to the backend folder, install dependencies, and create an `.env` file:
+---
+
+# ⚙️ Local Installation
+
+
+Clone repository:
+
+```bash
+git clone https://github.com/THIRUMULANATHAN/Assessment-and-Test-System.git
+
+cd Assessment-and-Test-System
+```
+
+
+## Backend Setup
+
+
 ```bash
 cd nodeapp
+
 npm install
+
+npm run dev
 ```
 
-Create a `.env` file inside `nodeapp/`:
+
+Create `.env`:
+
+
 ```env
 PORT=8080
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret_key
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your_email@gmail.com
-SMTP_PASS=your_app_password
+
+MONGO_URI=your_database_url
+
+JWT_SECRET=your_secret_key
+
+SMTP_USER=your_email
+
+SMTP_PASS=your_password
 ```
 
-Start the backend development server:
-```bash
-npm run dev
-```
 
-### 3. Frontend Configuration (`reactapp/frontend`)
-Navigate to the frontend folder, install dependencies:
+---
+
+## Frontend Setup
+
+
 ```bash
-cd ../reactapp/frontend
+cd reactapp/frontend
+
 npm install
-```
 
-Start the Vite development server:
-```bash
 npm run dev
 ```
-Open [http://localhost:5174](http://localhost:5174) (or the dynamically shifted port shown in terminal output) to explore.
 
----
 
-## 🔌 API Reference Endpoints
-
-### 🔐 Authentication
-* `POST /api/auth/register` - Create student, teacher, or admin accounts.
-* `POST /api/auth/login` - Verify credentials and return active user profile payloads.
-
-### 📝 Quizzes
-* `GET /api/quizzes` - Retrieve all available quizzes.
-* `POST /api/quizzes` - Publish a new quiz (Teacher/Admin restricted).
-* `DELETE /api/quizzes/:id` - Remove a quiz from the library.
-* `POST /api/quizzes/:id/submit` - Process test submissions and generate reports.
-
-### 👥 Users & Telemetry
-* `GET /api/users` - List all registered user profiles (Admin restricted).
-* `GET /api/users/stats` - Fetch attempted quiz stats, average score, and accuracy metrics for the authenticated student.
-* `GET /api/quizzes/reports` - Retrieve assessment attempts.
-
----
-
-## 🛡️ Proctoring Lifecycle Flow
+Application:
 
 ```
-[Start Protected Quiz]
-        │
-        ▼
-[Request Camera & Fullscreen Access]
-        │
-        ├─► User Rejects: Block entry.
-        └─► User Grants: Start MediaRecorder recording logs & Lock Fullscreen.
-        │
-        ▼
-[Active Assessment Sandbox]
-        │
-        ├─► User Exits Fullscreen: Freeze UI, Log Violation Warning.
-        ├─► User Blurs Tab: Freeze UI, Trigger Blocker Modal.
-        │
-        ▼
-[Quiz Submission / Timer Expiry]
-        │
-        ▼
-[Stop Media Stream] ──► [Convert Blob to Base64] ──► [Save Decoded .webm on Server] ──► [Email Reports]
+http://localhost:5173
 ```
+
 
 ---
 
-## 🤝 Connect & Inquire
+# 🔌 API Modules
 
-Built for professional placement evaluations and recruitment verification.
 
-* **Author**: Thirumulanathan
-* **Email**: [thiru2005v@gmail.com](mailto:thiru2005v@gmail.com)
-* **GitHub**: [github.com/THIRUMULANATHAN](https://github.com/THIRUMULANATHAN)
-* **LinkedIn**: [linkedin.com/in/thirumulanathan](https://www.linkedin.com/in/thirumulanathan/)
+## Authentication
+
+```
+POST /api/auth/register
+
+POST /api/auth/login
+```
+
+
+## Quiz
+
+```
+GET    /api/quizzes
+
+POST   /api/quizzes
+
+DELETE /api/quizzes/:id
+
+POST   /api/quizzes/:id/submit
+```
+
+
+## Reports
+
+```
+GET /api/quizzes/reports
+
+GET /api/users/stats
+```
+
+
+---
+
+# 📌 Future Enhancements
+
+- AI cheating behaviour analysis
+- Face recognition verification
+- Cloud video storage integration
+- Advanced ranking analytics
+- Question bank generation
+
+
+---
+
+# 👤 Developer
+
+**Thirumulanathan V**
+
+Full Stack Developer  
+MERN + Spring Boot
+
+📧 Email:  
+thiru2005v@gmail.com
+
+GitHub:  
+https://github.com/THIRUMULANATHAN
+
+LinkedIn:  
+https://www.linkedin.com/in/thirumulanathan/
+
+
+---
+
+⭐ If you like this project, consider giving the repository a star!
