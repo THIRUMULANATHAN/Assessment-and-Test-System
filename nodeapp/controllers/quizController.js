@@ -1,6 +1,8 @@
 // nodeapp/controllers/quizController.js
 const fs = require('fs');
 const path = require('path');
+const dns = require("dns");
+dns.setDefaultResultOrder("ipv4first");
 const { Quiz, Result } = require('../models/Quiz');
 const User = require('../models/User');
 
@@ -154,26 +156,20 @@ ATS Automated Proctoring System
   const hasSMTPConfig = process.env.SMTP_HOST && process.env.SMTP_PORT && process.env.SMTP_USER;
 
   if (hasSMTPConfig) {
-    transporter = nodemailer.createTransport({
+      transporter = nodemailer.createTransport({
 
     host: "smtp.gmail.com",
     port: 587,
     secure: false,
-
-    family: 4, // FORCE IPv4 for Render
 
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS.replace(/\s/g, "")
     },
 
-    tls: {
-      rejectUnauthorized: false
-    },
+    requireTLS: true,
 
-    connectionTimeout: 30000,
-    greetingTimeout: 30000,
-    socketTimeout: 30000
+    connectionTimeout: 30000
 
   });
   } else {
