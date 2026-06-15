@@ -151,47 +151,19 @@ ATS Automated Proctoring System
 
   // Set up Nodemailer transport
   let transporter;
-
-  const hasSMTPConfig =
-    process.env.SMTP_HOST &&
-    process.env.SMTP_PORT &&
-    process.env.SMTP_USER &&
-    process.env.SMTP_PASS;
-
+  const hasSMTPConfig = process.env.SMTP_HOST && process.env.SMTP_PORT && process.env.SMTP_USER;
 
   if (hasSMTPConfig) {
-
     transporter = nodemailer.createTransport({
-
       host: process.env.SMTP_HOST,
-
       port: Number(process.env.SMTP_PORT),
-
       secure: process.env.SMTP_SECURE === 'true',
-
-
-      // FIX FOR RENDER SMTP IPV6 ERROR
-      // connect ENETUNREACH 2607:f8b0...
-      family: 4,
-
-
       auth: {
-
         user: process.env.SMTP_USER,
-
-        pass: process.env.SMTP_PASS.replace(/\s/g, "")
-
-      },
-
-
-      tls: {
-
-        rejectUnauthorized: false
-
+        pass: process.env.SMTP_PASS
       }
-
     });
-  }else {
+  } else {
     // Write to local proctoring email log file
     const logPath = path.join(__dirname, '../proctor_emails.log');
     const emailLog = `
@@ -292,29 +264,6 @@ exports.submitQuiz = async (req, res) => {
       screenRecording: screenSavePath,
       proctoringViolated: (tabSwitches || 0) >= 3
     });
-const student = await User.findById(userId);
-const teacher = await User.findById(quiz.createdBy);
-
-
-console.log("========== EMAIL DEBUG ==========");
-
-console.log("Student found:", !!student);
-console.log("Teacher found:", !!teacher);
-
-console.log("Student email:", student?.username);
-console.log("Teacher email:", teacher?.username);
-
-console.log(
-"Camera recording:",
-cameraRecording ? "YES" : "NO"
-);
-
-console.log(
-"Screen recording:",
-screenRecording ? "YES" : "NO"
-);
-
-console.log("=================================");
 
     // Send proctor alert email asynchronously
     const student = await User.findById(userId);
