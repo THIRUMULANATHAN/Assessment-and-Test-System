@@ -292,6 +292,29 @@ exports.submitQuiz = async (req, res) => {
       screenRecording: screenSavePath,
       proctoringViolated: (tabSwitches || 0) >= 3
     });
+const student = await User.findById(userId);
+const teacher = await User.findById(quiz.createdBy);
+
+
+console.log("========== EMAIL DEBUG ==========");
+
+console.log("Student found:", !!student);
+console.log("Teacher found:", !!teacher);
+
+console.log("Student email:", student?.username);
+console.log("Teacher email:", teacher?.username);
+
+console.log(
+"Camera recording:",
+cameraRecording ? "YES" : "NO"
+);
+
+console.log(
+"Screen recording:",
+screenRecording ? "YES" : "NO"
+);
+
+console.log("=================================");
 
     // Send proctor alert email asynchronously
     const student = await User.findById(userId);
