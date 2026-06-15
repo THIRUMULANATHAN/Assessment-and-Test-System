@@ -271,34 +271,51 @@ exports.submitQuiz = async (req, res) => {
     });
 
  // Send mail only for protected quizzes
-
+// Send mail only for protected quizzes
 if (quiz.isProtected) {
 
-  const student = await User.findById(userId);
-  const teacher = await User.findById(quiz.createdBy);
+  try {
 
+    const student = await User.findById(userId);
+    const teacher = await User.findById(quiz.createdBy);
 
-  sendProctoringEmail(
-    student.username,
-    teacher.username,
-    quiz.title,
-    score,
-    totalMarks,
-    tabSwitches || 0,
-    cameraRecording,
-    screenRecording
-  )
-  .then(() => {
-    console.log(
-      `📧 Proctor report sent to ${teacher.username}`
-    );
-  })
-  .catch((err) => {
+    if (!student || !teacher) {
+      console.log("⚠️ Student or teacher missing. Mail skipped.");
+    }
+    else {
+
+      sendProctoringEmail(
+        student.username,
+        teacher.username,
+        quiz.title,
+        score,
+        totalMarks,
+        tabSwitches || 0,
+        cameraRecording,
+        screenRecording
+      )
+      .then(() => {
+        console.log(
+          `✅ Background mail completed`
+        );
+      })
+      .catch((err) => {
+        console.error(
+          "❌ Background mail failed:",
+          err.message
+        );
+      });
+
+    }
+
+  } catch(error) {
+
     console.error(
-      "Email background error:",
-      err.message
+      "❌ Mail initialization failed:",
+      error.message
     );
-  });
+
+  }
 
 }
 
