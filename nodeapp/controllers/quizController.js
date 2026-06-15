@@ -270,10 +270,13 @@ exports.submitQuiz = async (req, res) => {
       proctoringViolated: (tabSwitches || 0) >= 3
     });
 
- // Send mail only for protected quizzes
+
 // Send mail only for protected quizzes
 if (quiz.isProtected) {
-
+  console.log(
+    "Protected status:",
+    quiz.isProtected
+  );
   try {
 
     const student = await User.findById(userId);
