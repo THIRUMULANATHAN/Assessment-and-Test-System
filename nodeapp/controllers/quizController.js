@@ -151,19 +151,47 @@ ATS Automated Proctoring System
 
   // Set up Nodemailer transport
   let transporter;
-  const hasSMTPConfig = process.env.SMTP_HOST && process.env.SMTP_PORT && process.env.SMTP_USER;
+
+  const hasSMTPConfig =
+    process.env.SMTP_HOST &&
+    process.env.SMTP_PORT &&
+    process.env.SMTP_USER &&
+    process.env.SMTP_PASS;
+
 
   if (hasSMTPConfig) {
+
     transporter = nodemailer.createTransport({
+
       host: process.env.SMTP_HOST,
+
       port: Number(process.env.SMTP_PORT),
+
       secure: process.env.SMTP_SECURE === 'true',
+
+
+      // FIX FOR RENDER SMTP IPV6 ERROR
+      // connect ENETUNREACH 2607:f8b0...
+      family: 4,
+
+
       auth: {
+
         user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS
+
+        pass: process.env.SMTP_PASS.replace(/\s/g, "")
+
+      },
+
+
+      tls: {
+
+        rejectUnauthorized: false
+
       }
+
     });
-  } else {
+  }else {
     // Write to local proctoring email log file
     const logPath = path.join(__dirname, '../proctor_emails.log');
     const emailLog = `
