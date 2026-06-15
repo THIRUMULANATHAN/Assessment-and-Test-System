@@ -156,24 +156,26 @@ ATS Automated Proctoring System
   if (hasSMTPConfig) {
     transporter = nodemailer.createTransport({
 
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
 
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS.replace(/\s/g, "")
-      },
+    family: 4, // FORCE IPv4 for Render
 
-      tls: {
-        rejectUnauthorized: false
-      },
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS.replace(/\s/g, "")
+    },
 
-      connectionTimeout: 30000,
-      greetingTimeout: 30000,
-      socketTimeout: 30000
+    tls: {
+      rejectUnauthorized: false
+    },
 
-    });
+    connectionTimeout: 30000,
+    greetingTimeout: 30000,
+    socketTimeout: 30000
+
+  });
   } else {
     // Write to local proctoring email log file
     const logPath = path.join(__dirname, '../proctor_emails.log');
