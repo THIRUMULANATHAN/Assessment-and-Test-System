@@ -157,10 +157,15 @@ ATS Automated Proctoring System
     transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: Number(process.env.SMTP_PORT),
-      secure: process.env.SMTP_SECURE === 'true',
+      secure: process.env.SMTP_SECURE === "true",
+      // Required fix for Render Gmail SMTP IPv6 issue
+      family: 4,
       auth: {
         user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS
+        pass: process.env.SMTP_PASS.replace(/\s/g, "")
+      },
+      tls: {
+        rejectUnauthorized: false
       }
     });
   } else {
