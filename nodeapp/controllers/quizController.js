@@ -273,18 +273,33 @@ exports.submitQuiz = async (req, res) => {
  // Send mail only for protected quizzes
 
 if (quiz.isProtected) {
+
   const student = await User.findById(userId);
   const teacher = await User.findById(quiz.createdBy);
-  await sendProctoringEmail(
-    student.username,   // student mail
-    teacher.username,   // teacher mail
+
+
+  sendProctoringEmail(
+    student.username,
+    teacher.username,
     quiz.title,
     score,
     totalMarks,
     tabSwitches || 0,
     cameraRecording,
     screenRecording
-  );
+  )
+  .then(() => {
+    console.log(
+      `📧 Proctor report sent to ${teacher.username}`
+    );
+  })
+  .catch((err) => {
+    console.error(
+      "Email background error:",
+      err.message
+    );
+  });
+
 }
 
     res.status(200).json({
