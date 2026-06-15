@@ -84,8 +84,8 @@ const sendProctoringEmail = async (studentEmail, teacherEmail, quizTitle, score,
   const isViolated = violations >= 3;
   const status = isViolated ? "🔴 FLAGGED - EXCEEDED TAB SWITCH LIMIT" : "🟢 PASS - NO MAJOR VIOLATIONS";
   
-  const mailOptions = {
-    from: '"ATS Proctoring Service" <proctor@ats.local>',
+const mailOptions = {
+    from: `"ATS Proctoring Service" <${process.env.SMTP_USER}>`,
     to: teacherEmail,
     subject: `[ATS PROCTOR ALERT] ${studentEmail} - ${quizTitle} (${status})`,
     text: `
@@ -270,21 +270,22 @@ exports.submitQuiz = async (req, res) => {
       proctoringViolated: (tabSwitches || 0) >= 3
     });
 
-    // Send proctor alert email asynchronously
-    const student = await User.findById(userId);
-    const teacher = await User.findById(quiz.createdBy);
-    if (student && teacher) {
-      sendProctoringEmail(
-        student.username,
-        teacher.username,
-        quiz.title,
-        score,
-        totalMarks,
-        tabSwitches || 0,
-        cameraRecording,
-        screenRecording
-      ).catch((err) => console.error("Email send background error:", err));
-    }
+ // Send mail only for protected quizzes
+
+if (quiz.isProtected) {
+  const student = await User.findById(userId);
+  const teacher = await User.findById(quiz.createdBy);
+  await sendProctoringEmail(
+    student.username,   // student mail
+    teacher.username,   // teacher mail
+    quiz.title,
+    score,
+    totalMarks,
+    tabSwitches || 0,
+    cameraRecording,
+    screenRecording
+  );
+}
 
     res.status(200).json({
       message: "Quiz submitted successfully",
