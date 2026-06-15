@@ -1,62 +1,174 @@
 // nodeapp/index.js
-const express = require('express');
-const dotenv = require('dotenv');
-const morgan = require('morgan');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const { swaggerDocs } = require("./swagger");
 
-const path = require('path');
+const express = require("express");
+const dotenv = require("dotenv");
+const morgan = require("morgan");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const path = require("path");
+// const { swaggerDocs } = require("./swagger");
 
 dotenv.config();
 
 const app = express();
 
-// Middleware
-app.use(express.json({ limit: '200mb' }));
-app.use(express.urlencoded({ limit: '200mb', extended: true }));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use(morgan('dev'));
+
+// ==========================
+// Middlewares
+// ==========================
+
+app.use(express.json({ limit: "200mb" }));
+
+app.use(
+  express.urlencoded({
+    limit: "200mb",
+    extended: true,
+  })
+);
+
+app.use(morgan("dev"));
+
+
+// ==========================
+// Static Upload Folder
+// ==========================
+
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"))
+);
+
+
+// ==========================
+// CORS Configuration
+// ==========================
+
 const allowedOrigins = [
-  'http://localhost:5173',
-  'http://localhost:5174',
-  'http://127.0.0.1:5173',
-  'http://127.0.0.1:5174'
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://127.0.0.1:5173",
+  "http://127.0.0.1:5174",
+
+  // Production frontend
+  "https://assessment-and-test-system.vercel.app",
 ];
 
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin) || origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE']
-}));
 
+app.use(
+  cors({
+    origin: function (origin, callback) {
+
+      // allow postman/server requests
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (
+        allowedOrigins.includes(origin) ||
+        origin.startsWith("http://localhost:") ||
+        origin.startsWith("http://127.0.0.1:")
+      ) {
+        return callback(null, true);
+      }
+
+      return callback(
+        new Error(`CORS blocked for origin: ${origin}`)
+      );
+    },
+
+    methods: [
+      "GET",
+      "POST",
+      "PUT",
+      "DELETE",
+      "PATCH",
+      "OPTIONS",
+    ],
+
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+    ],
+
+    credentials: true,
+  })
+);
+
+
+// ==========================
 // MongoDB Connection
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log('✅ MongoDB connected'))
-.catch(err => console.error('❌ MongoDB connection error:', err));
+// ==========================
 
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() =>
+    console.log("✅ MongoDB Connected")
+  )
+  .catch((err) =>
+    console.error(
+      "❌ MongoDB Error:",
+      err.message
+    )
+  );
+
+
+// ==========================
 // Routes
-app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/quizzes', require('./routes/quizRoutes'));
-app.use('/api/users', require('./routes/userRoutes'));
+// ==========================
 
-// Swagger Docs
+app.use(
+  "/api/auth",
+  require("./routes/authRoutes")
+);
+
+app.use(
+  "/api/quizzes",
+  require("./routes/quizRoutes")
+);
+
+app.use(
+  "/api/users",
+  require("./routes/userRoutes")
+);
+
+
+// ==========================
+// Root Test Route
+// ==========================
+
+app.get("/", (req, res) => {
+  res.send(
+    "Assessment & Test System API running 🚀"
+  );
+});
+
+
+// ==========================
+// Swagger
+// ==========================
+
 // swaggerDocs(app);
 
-// Root
-app.get('/', (req, res) => res.send('Assessment & Test System API running'));
 
-// 404 handler
-app.use((req, res) => res.status(404).json({ message: 'Route not found' }));
+// ==========================
+// 404 Handler
+// ==========================
 
-// Start server
+app.use((req, res) => {
+  res.status(404).json({
+    message: "Route not found",
+  });
+});
+
+
+// ==========================
+// Server Start
+// ==========================
+
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
+app.listen(PORT, () => {
+  console.log(
+    `🚀 Server running on port ${PORT}`
+  );
+});
