@@ -1,61 +1,76 @@
-const fs = require("fs");
-const path = require("path");
+// nodeapp/controllers/quizController.js
+
 const nodemailer = require("nodemailer");
 
 const { Quiz, Result } = require("../models/Quiz");
 const User = require("../models/User");
 
 
-// ------------------ QUIZ CRUD ------------------
+// =================================================
+// QUIZ CRUD
+// =================================================
+
 
 exports.addQuiz = async (req, res) => {
-  try {
 
-    const {
-      title,
-      subject,
-      imgUrl,
-      questions,
-      category,
-      difficulty,
-      timeLimit,
-      isProtected
-    } = req.body;
+try {
 
-
-    const quiz = await Quiz.create({
-
-      title,
-      subject,
-      imgUrl,
-      questions,
-      category,
-      difficulty,
-      timeLimit,
-      isProtected,
-
-      createdBy: req.user.id
-
-    });
+const {
+title,
+subject,
+imgUrl,
+questions,
+category,
+difficulty,
+timeLimit,
+isProtected
+} = req.body;
 
 
-    res.status(201).json(quiz);
+if(!title || !subject || !questions?.length){
+
+return res.status(400).json({
+message:"Required fields missing"
+});
+
+}
 
 
-  } catch (err) {
+const quiz = await Quiz.create({
 
-    res.status(500).json({
-      error: err.message
-    });
+title,
+subject,
+imgUrl,
+questions,
+category,
+difficulty,
+timeLimit,
+isProtected,
 
-  }
+createdBy:req.user.id
+
+});
+
+
+res.status(201).json(quiz);
+
+
+}catch(err){
+
+res.status(500).json({
+error:err.message
+});
+
+}
+
 };
 
 
 
-// ------------------ GET QUIZZES ------------------
 
-exports.getQuizzes = async (req,res)=>{
+// GET ALL
+
+exports.getQuizzes = async(req,res)=>{
 
 try{
 
@@ -83,16 +98,15 @@ error:err.message
 
 
 
-// ------------------ GET BY ID ------------------
+// GET SINGLE
 
 exports.getQuizById = async(req,res)=>{
 
 try{
 
+
 const quiz =
-await Quiz.findById(
-req.params.id
-)
+await Quiz.findById(req.params.id)
 .populate(
 "createdBy",
 "username"
@@ -100,8 +114,8 @@ req.params.id
 
 
 if(!quiz)
-return res.status(404)
-.json({
+
+return res.status(404).json({
 message:"Quiz not found"
 });
 
@@ -117,25 +131,81 @@ error:err.message
 
 }
 
+
 };
 
 
 
 
-// ------------------ DELETE ------------------
+// UPDATE
+
+
+exports.updateQuiz = async(req,res)=>{
+
+try{
+
+
+const quiz =
+await Quiz.findByIdAndUpdate(
+
+req.params.id,
+
+req.body,
+
+{
+new:true,
+runValidators:true
+}
+
+);
+
+
+
+if(!quiz)
+
+return res.status(404).json({
+message:"Quiz not found"
+});
+
+
+
+res.json(quiz);
+
+
+
+}catch(err){
+
+
+res.status(500).json({
+error:err.message
+});
+
+
+}
+
+};
+
+
+
+
+// DELETE QUIZ
+
 
 exports.deleteQuiz = async(req,res)=>{
 
 try{
+
 
 await Quiz.findByIdAndDelete(
 req.params.id
 );
 
 
+
 res.json({
-message:"Deleted"
+message:"Quiz deleted"
 });
+
 
 
 }catch(err){
@@ -146,17 +216,21 @@ error:err.message
 
 }
 
+
 };
 
 
 
 
+
+
 // =================================================
-//                BREVO EMAIL SERVICE
+// BREVO SMTP SERVICE
 // =================================================
 
 
 const sendProctoringEmail = async(
+
 studentEmail,
 teacherEmail,
 quizTitle,
@@ -165,18 +239,18 @@ totalMarks,
 violations,
 cameraRecording,
 screenRecording
+
 )=>{
 
 
 const attachments=[];
 
 
-// webcam
 
-if(
-cameraRecording &&
-cameraRecording.includes(";base64,")
-){
+// webcam attachment
+
+if(cameraRecording?.includes(";base64,")){
+
 
 const mime =
 cameraRecording.substring(
@@ -190,8 +264,11 @@ attachments.push({
 filename:"webcam.webm",
 
 content:Buffer.from(
+
 cameraRecording.split(";base64,")[1],
+
 "base64"
+
 ),
 
 contentType:mime
@@ -203,13 +280,12 @@ contentType:mime
 
 
 
-// screen
+
+// screen attachment
 
 
-if(
-screenRecording &&
-screenRecording.includes(";base64,")
-){
+if(screenRecording?.includes(";base64,")){
+
 
 const mime =
 screenRecording.substring(
@@ -218,16 +294,21 @@ screenRecording.indexOf(";")
 );
 
 
+
 attachments.push({
 
 filename:"screen.webm",
 
 content:Buffer.from(
+
 screenRecording.split(";base64,")[1],
+
 "base64"
+
 ),
 
 contentType:mime
+
 
 });
 
@@ -237,15 +318,17 @@ contentType:mime
 
 
 
-
 const transporter =
 nodemailer.createTransport({
 
+
 host:process.env.SMTP_HOST,
+
 
 port:Number(
 process.env.SMTP_PORT
 ),
+
 
 secure:false,
 
@@ -255,6 +338,7 @@ auth:{
 user:
 process.env.SMTP_USER,
 
+
 pass:
 process.env.SMTP_PASS
 
@@ -262,6 +346,13 @@ process.env.SMTP_PASS
 
 
 });
+
+
+
+
+console.log(
+"📨 Sending using Brevo SMTP..."
+);
 
 
 
@@ -279,11 +370,9 @@ subject:
 `ATS Proctor Report - ${quizTitle}`,
 
 
-
 html:`
 
-<h2>ATS Automated Report</h2>
-
+<h2>ATS Automated Proctor Report</h2>
 
 <table border="1" cellpadding="10">
 
@@ -313,9 +402,8 @@ html:`
 
 </table>
 
-
 <p>
-Recording files attached if available.
+Camera and screen recordings attached if available.
 </p>
 
 `,
@@ -341,12 +429,14 @@ teacherEmail
 
 
 
+
 // =================================================
-//                 SUBMIT QUIZ
+// SUBMIT QUIZ
 // =================================================
 
 
 exports.submitQuiz = async(req,res)=>{
+
 
 try{
 
@@ -373,10 +463,10 @@ quizId
 );
 
 
+
 if(!quiz)
 
-return res.status(404)
-.json({
+return res.status(404).json({
 message:"Quiz missing"
 });
 
@@ -391,19 +481,21 @@ let score=0;
 quiz.questions.forEach(q=>{
 
 
-const ans =
+const userAnswer =
 answers.find(
-a=>
-a.questionId ===
-q._id.toString()
+
+a=>a.questionId===q._id.toString()
+
 );
 
 
 
 if(
-ans &&
-ans.answer ===
-q.correctAnswer
+
+userAnswer &&
+
+userAnswer.answer===q.correctAnswer
+
 )
 
 score++;
@@ -415,15 +507,17 @@ score++;
 
 
 
-const result =
 await Result.create({
 
 
 user:userId,
 
+
 quiz:quizId,
 
+
 score,
+
 
 totalMarks:
 quiz.questions.length,
@@ -438,7 +532,7 @@ tabSwitches || 0,
 
 proctoringViolated:
 
-(tabSwitches||0)>=3
+(tabSwitches || 0)>=3
 
 
 });
@@ -446,11 +540,13 @@ proctoringViolated:
 
 
 
-// ------------ SEND EMAIL ONLY PROTECTED --------
+
+
+// SEND ONLY PROTECTED QUIZ
 
 
 console.log(
-"Protected:",
+"🔒 Protected:",
 quiz.isProtected
 );
 
@@ -474,6 +570,7 @@ quiz.createdBy
 
 
 
+
 console.log(
 "Student:",
 student?.username
@@ -488,33 +585,25 @@ teacher?.username
 
 
 
-if(student && teacher){
 
+if(student && teacher){
 
 
 sendProctoringEmail(
 
-
 student.username,
-
 
 teacher.username,
 
-
 quiz.title,
-
 
 score,
 
-
 quiz.questions.length,
-
 
 tabSwitches || 0,
 
-
 cameraRecording,
-
 
 screenRecording
 
@@ -524,7 +613,7 @@ screenRecording
 .then(()=>{
 
 console.log(
-"📨 Background mail done"
+"✅ Brevo background mail completed"
 );
 
 })
@@ -532,27 +621,24 @@ console.log(
 .catch(err=>{
 
 console.log(
-"❌ Mail error:",
+"❌ Brevo mail failed:",
 err.message
 );
 
 });
 
 
-
 }
 
 
 }
-
 
 
 
 
 res.json({
 
-message:
-"Quiz submitted successfully",
+message:"Quiz submitted successfully",
 
 score,
 
@@ -570,8 +656,8 @@ quiz.questions.length
 console.log(err);
 
 
-res.status(500)
-.json({
+
+res.status(500).json({
 error:err.message
 });
 
@@ -585,17 +671,34 @@ error:err.message
 
 
 
-// ------------------ REPORTS ------------------
+
+
+
+// =================================================
+// REPORTS
+// =================================================
+
 
 
 exports.getReports = async(req,res)=>{
 
+
 try{
+
 
 const user =
 await User.findOne({
 username:req.params.studentName
 });
+
+
+
+if(!user)
+
+return res.status(404).json({
+message:"User not found"
+});
+
 
 
 const reports =
@@ -609,34 +712,40 @@ user:user._id
 
 
 
+
 res.json(
+
 reports.map(r=>({
 
 id:r._id,
 
 quizTitle:
-r.quiz?.title,
+r.quiz?.title || "Deleted",
 
 subject:
-r.quiz?.subject,
+r.quiz?.subject || "N/A",
 
 score:r.score,
 
-totalMarks:
-r.totalMarks,
+totalMarks:r.totalMarks,
 
 date:r.date
 
+
 }))
+
+
 );
 
 
 
 }catch(err){
 
+
 res.status(500).json({
 error:err.message
 });
+
 
 }
 
@@ -646,10 +755,11 @@ error:err.message
 
 
 
-// ---------------- ALL REPORTS ------------------
-
 
 exports.getAllReports = async(req,res)=>{
+
+
+try{
 
 
 const reports =
@@ -676,14 +786,16 @@ if(!r.user)
 return;
 
 
+
 if(!data[r.user.username])
 
 data[r.user.username]=[];
 
 
 
-data[r.user.username]
-.push({
+
+data[r.user.username].push({
+
 
 id:r._id,
 
@@ -697,6 +809,7 @@ totalMarks:r.totalMarks,
 
 date:r.date
 
+
 });
 
 
@@ -707,15 +820,126 @@ date:r.date
 res.json(data);
 
 
+
+}catch(err){
+
+
+res.status(500).json({
+error:err.message
+});
+
+
+}
+
+
 };
 
 
 
 
-// ---------------- SEARCH ------------------
+// DELETE REPORT
+
+
+exports.deleteReport = async(req,res)=>{
+
+
+try{
+
+
+await Result.findByIdAndDelete(
+req.params.id
+);
+
+
+
+res.json({
+message:"Report deleted"
+});
+
+
+
+}catch(err){
+
+
+res.status(500).json({
+error:err.message
+});
+
+
+}
+
+
+};
+
+
+
+
+
+
+
+
+// FILTER
+
+
+exports.filterQuizzes = async(req,res)=>{
+
+
+try{
+
+
+const filter={};
+
+
+
+if(req.query.category)
+
+filter.category=req.query.category;
+
+
+
+if(req.query.difficulty)
+
+filter.difficulty=req.query.difficulty;
+
+
+
+
+const quizzes =
+await Quiz.find(filter);
+
+
+
+
+res.json(quizzes);
+
+
+
+}catch(err){
+
+
+res.status(500).json({
+error:err.message
+});
+
+
+}
+
+
+};
+
+
+
+
+
+
+
+// SEARCH
 
 
 exports.searchQuizzes = async(req,res)=>{
+
+
+try{
 
 
 const keyword =
@@ -725,7 +949,6 @@ req.query.keyword || "";
 
 const quizzes =
 await Quiz.find({
-
 
 $or:[
 
@@ -756,15 +979,34 @@ $options:"i"
 res.json(quizzes);
 
 
+
+}catch(err){
+
+
+res.status(500).json({
+error:err.message
+});
+
+
+}
+
+
 };
 
 
 
 
-// ---------------- STATS ------------------
+
+
+
+
+// STATS
 
 
 exports.getUserStats=async(req,res)=>{
+
+
+try{
 
 
 const results =
@@ -774,34 +1016,57 @@ user:req.params.userId
 
 
 
+
 res.json({
+
 
 totalQuizzes:
 await Quiz.countDocuments(),
+
 
 
 totalAttempts:
 results.length,
 
 
+
 averageScore:
+
 
 results.length?
 
+
 (
+
 results.reduce(
+
 (a,b)=>a+b.score,
+
 0
+
 )
 
 /results.length
 
 ).toFixed(2)
 
+
 :0
 
 
 });
+
+
+
+}catch(err){
+
+
+res.status(500).json({
+error:err.message
+});
+
+
+}
 
 
 };
