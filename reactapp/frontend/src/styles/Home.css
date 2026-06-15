@@ -1,0 +1,339 @@
+/* Home.css — Premium landing page styles */
+
+.landing-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at 100% 0%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
+              radial-gradient(circle at 0% 100%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+              #f8fafc;
+  color: #0f172a;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Header */
+.landing-header {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.landing-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #ffffff;
+  font-size: 1.3rem;
+  box-shadow: 0 8px 16px rgba(99, 102, 241, 0.22);
+}
+
+.landing-brand strong {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #0f172a, #334155);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.landing-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.landing-btn-text {
+  color: #475569;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: color 0.2s;
+}
+
+.landing-btn-text:hover {
+  color: var(--primary);
+}
+
+.landing-btn-solid {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #ffffff;
+  padding: 10px 22px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.92rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+.landing-btn-solid:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(99, 102, 241, 0.25);
+}
+
+/* Hero Section */
+.landing-hero {
+  max-width: 1200px;
+  width: 100%;
+  margin: 60px auto auto;
+  padding: 0 24px 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.landing-hero-content {
+  flex: 1.2;
+  max-width: 620px;
+  animation: slideUpHome 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-badge {
+  display: inline-block;
+  background: rgba(99, 102, 241, 0.08);
+  color: var(--primary);
+  padding: 6px 14px;
+  border-radius: 99px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 20px;
+  border: 1px solid rgba(99, 102, 241, 0.15);
+}
+
+.landing-hero-content h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+  font-weight: 900;
+  line-height: 1.1;
+  color: #0f172a;
+  letter-spacing: -0.03em;
+  margin-bottom: 24px;
+}
+
+.landing-hero-content p {
+  color: #475569;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin-bottom: 35px;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.hero-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #ffffff;
+  padding: 14px 28px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
+}
+
+.hero-btn-primary:hover {
+  filter: brightness(1.05);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+}
+
+.hero-btn-primary svg {
+  transition: transform 0.2s;
+}
+
+.hero-btn-primary:hover svg {
+  transform: translateX(4px);
+}
+
+.hero-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  background: #ffffff;
+  color: #475569;
+  border: 1.5px solid #cbd5e1;
+  padding: 13px 26px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-btn-secondary:hover {
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: #94a3b8;
+  transform: translateY(-2px);
+}
+
+/* Landing Visuals */
+.landing-visual {
+  flex: 0.9;
+  position: relative;
+  height: 400px;
+  min-width: 380px;
+}
+
+.floating-card {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 280px;
+}
+
+.floating-card .fc-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.floating-card strong {
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 2px;
+}
+
+.floating-card p {
+  color: #64748b;
+  font-size: 0.8rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Unique layouts and float keyframes for cards */
+.floating-card.c1 {
+  top: 15%;
+  left: 5%;
+  animation: floatCard1 5s ease-in-out infinite;
+}
+
+.floating-card.c1 .fc-icon {
+  background: rgba(239, 68, 68, 0.08);
+  color: var(--danger);
+}
+
+.floating-card.c2 {
+  top: 48%;
+  right: 5%;
+  animation: floatCard2 6s ease-in-out infinite;
+}
+
+.floating-card.c2 .fc-icon {
+  background: rgba(16, 185, 129, 0.08);
+  color: var(--success);
+}
+
+.floating-card.c3 {
+  bottom: 5%;
+  left: 20%;
+  animation: floatCard3 7s ease-in-out infinite;
+}
+
+.floating-card.c3 .fc-icon {
+  background: rgba(99, 102, 241, 0.08);
+  color: var(--primary);
+}
+
+@keyframes floatCard1 {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes floatCard2 {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+@keyframes floatCard3 {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes slideUpHome {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .landing-hero {
+    flex-direction: column;
+    text-align: center;
+    margin-top: 30px;
+    gap: 60px;
+  }
+  .landing-hero-content {
+    max-width: 100%;
+  }
+  .hero-actions {
+    justify-content: center;
+  }
+  .landing-visual {
+    width: 100%;
+    max-width: 480px;
+    height: 360px;
+    margin: 0 auto;
+  }
+  .floating-card.c1 { left: 0; }
+  .floating-card.c2 { right: 0; }
+  .floating-card.c3 { left: 15%; }
+}
+
+@media (max-width: 480px) {
+  .landing-header {
+    padding: 16px;
+  }
+  .landing-hero {
+    padding-inline: 16px;
+  }
+  .floating-card {
+    width: 250px;
+    padding: 14px 18px;
+  }
+  .landing-visual {
+    height: 320px;
+    min-width: 100%;
+  }
+}

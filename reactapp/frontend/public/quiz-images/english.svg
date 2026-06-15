@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 360" role="img" aria-labelledby="title desc">
+  <title id="title">English quiz</title>
+  <desc id="desc">Open book and letter symbols on an orange background</desc>
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#9a3412"/><stop offset="1" stop-color="#f59e0b"/></linearGradient></defs>
+  <rect width="660" height="360" fill="url(#bg)"/>
+  <path d="M80 95q135-45 250 35v160q-115-80-250-25z" fill="#fff7ed" stroke="#fed7aa" stroke-width="8"/>
+  <path d="M580 95q-135-45-250 35v160q115-80 250-25z" fill="#fff7ed" stroke="#fed7aa" stroke-width="8"/>
+  <path d="M330 130v160" stroke="#fb923c" stroke-width="7"/>
+  <g stroke="#c2410c" stroke-width="6" opacity=".55"><path d="M115 145h165M115 180h165M115 215h135M380 145h165M380 180h165M410 215h135"/></g>
+  <text x="45" y="70" fill="#fff" font-family="Georgia,serif" font-size="52" font-weight="700">Aa</text>
+  <text x="530" y="70" fill="#fff" font-family="Georgia,serif" font-size="42" font-weight="700">“ ”</text>
+  <text x="35" y="338" fill="#fff" font-family="Arial,sans-serif" font-size="30" font-weight="700">ENGLISH</text>
+</svg>

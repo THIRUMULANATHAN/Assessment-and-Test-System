@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 360" role="img" aria-labelledby="title desc">
+  <title id="title">Chemistry quiz</title>
+  <desc id="desc">Laboratory flasks and molecules on a purple background</desc>
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#581c87"/><stop offset="1" stop-color="#db2777"/></linearGradient></defs>
+  <rect width="660" height="360" fill="url(#bg)"/>
+  <g stroke="#f5d0fe" stroke-width="9" stroke-linejoin="round">
+    <path d="M165 55h90M190 55v100l-85 130q-13 20 12 20h216q25 0 12-20l-85-130V55" fill="#fff" fill-opacity=".14"/>
+    <path d="M145 240h160" fill="none"/><path d="M176 190h98" fill="none"/>
+  </g>
+  <path d="M136 247h178l31 48H105z" fill="#22d3ee" opacity=".85"/>
+  <g stroke="#fce7f3" stroke-width="6"><path d="M430 105l78 45 0 90-78 45-78-45v-90z" fill="none"/><path d="M430 105v90l78 45M430 195l-78 45" fill="none"/></g>
+  <g fill="#fde047"><circle cx="430" cy="105" r="14"/><circle cx="508" cy="150" r="14"/><circle cx="508" cy="240" r="14"/><circle cx="430" cy="285" r="14"/><circle cx="352" cy="240" r="14"/><circle cx="352" cy="150" r="14"/><circle cx="430" cy="195" r="14"/></g>
+  <text x="35" y="338" fill="#fff" font-family="Arial,sans-serif" font-size="30" font-weight="700">CHEMISTRY</text>
+</svg>

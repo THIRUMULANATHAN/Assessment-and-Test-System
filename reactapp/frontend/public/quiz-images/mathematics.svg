@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 360" role="img" aria-labelledby="title desc">
+  <title id="title">Mathematics quiz</title>
+  <desc id="desc">Calculator, graph, and mathematical symbols on a blue background</desc>
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#1d4ed8"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs>
+  <rect width="660" height="360" fill="url(#bg)"/>
+  <circle cx="90" cy="75" r="55" fill="#fff" opacity=".1"/><circle cx="590" cy="305" r="90" fill="#fff" opacity=".08"/>
+  <path d="M70 275h260M95 300V85" stroke="#bfdbfe" stroke-width="8" stroke-linecap="round"/>
+  <path d="M105 250l55-65 52 30 82-105" fill="none" stroke="#fbbf24" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="390" y="65" width="180" height="230" rx="22" fill="#eff6ff"/>
+  <rect x="420" y="95" width="120" height="48" rx="8" fill="#bfdbfe"/>
+  <g fill="#2563eb"><rect x="420" y="170" width="30" height="30" rx="6"/><rect x="465" y="170" width="30" height="30" rx="6"/><rect x="510" y="170" width="30" height="30" rx="6"/><rect x="420" y="215" width="30" height="30" rx="6"/><rect x="465" y="215" width="30" height="30" rx="6"/><rect x="510" y="215" width="30" height="30" rx="6"/></g>
+  <text x="55" y="65" fill="#fff" font-family="Arial,sans-serif" font-size="34" font-weight="700">x² + y²</text>
+  <text x="55" y="338" fill="#fff" font-family="Arial,sans-serif" font-size="30" font-weight="700">MATHEMATICS</text>
+</svg>

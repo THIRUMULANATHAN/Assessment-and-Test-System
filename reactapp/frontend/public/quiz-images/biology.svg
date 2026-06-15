@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 360" role="img" aria-labelledby="title desc">
+  <title id="title">Biology quiz</title>
+  <desc id="desc">DNA helix and leaf on a green background</desc>
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#14532d"/><stop offset="1" stop-color="#0d9488"/></linearGradient></defs>
+  <rect width="660" height="360" fill="url(#bg)"/>
+  <path d="M120 45c180 80 0 190 180 270M300 45c-180 80 0 190-180 270" fill="none" stroke="#bbf7d0" stroke-width="13" stroke-linecap="round"/>
+  <g stroke="#fef08a" stroke-width="8"><path d="M145 70h130M115 115h190M110 165h200M110 215h200M125 265h170M165 305h90"/></g>
+  <path d="M405 270c-12-125 52-196 173-203 14 121-43 208-173 203z" fill="#86efac"/>
+  <path d="M415 260c45-57 92-102 150-166M454 215l-3-72M493 174l66 5" fill="none" stroke="#166534" stroke-width="9" stroke-linecap="round"/>
+  <text x="35" y="338" fill="#fff" font-family="Arial,sans-serif" font-size="30" font-weight="700">BIOLOGY</text>
+</svg>

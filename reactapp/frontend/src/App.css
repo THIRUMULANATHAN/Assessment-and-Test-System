@@ -1,0 +1,65 @@
+/* app.css — App-level layout (sidebar + topbar + main) */
+
+.app {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background: linear-gradient(180deg, #2c3e50, #243142);
+  color: #fff;
+  padding: 20px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+.sidebar .brand { font-weight:800; font-size:1.1rem; letter-spacing:0.3px; }
+.sidebar nav { display:flex; flex-direction:column; gap:8px; margin-top:8px; }
+.sidebar a {
+  color: rgba(255,255,255,0.9);
+  text-decoration: none;
+  padding:10px 12px;
+  border-radius:10px;
+  display:flex; gap:10px; align-items:center;
+}
+.sidebar a.active, .sidebar a:hover { background: rgba(255,255,255,0.06); }
+
+/* Topbar */
+.topbar {
+  height:64px;
+  background: white;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 0 18px;
+  border-bottom: 1px solid #eef2f7;
+  box-shadow: 0 2px 8px rgba(16,24,40,0.02);
+}
+
+/* Main content */
+.main {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+}
+
+/* Main container */
+.main .content {
+  padding: 24px;
+  width:100%;
+}
+
+/* Mobile behavior */
+@media (max-width: 900px) {
+  .sidebar { position: fixed; left: -100%; top:0; height:100vh; z-index:2000; transition: left .25s ease; }
+  .sidebar.open { left:0; }
+  .topbar .menu-btn { display:block; }
+}
+@media (min-width:901px) {
+  .topbar .menu-btn { display:none; }
+}

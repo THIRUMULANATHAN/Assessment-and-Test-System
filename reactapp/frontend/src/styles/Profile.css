@@ -1,0 +1,75 @@
+/* Profile.css — Premium user profile page styles */
+
+.profile-container {
+  max-width: 480px;
+  margin: 40px auto;
+  padding: 40px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--glass-border);
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-container h2 {
+  font-family: 'Outfit', sans-serif;
+  text-align: center;
+  color: #0f172a;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 25px;
+}
+
+.profile-avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 12px;
+}
+
+.profile-avatar-circle {
+  width: 90px;
+  height: 90px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #ffffff;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 950;
+  font-size: 2.2rem;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+  transform: rotate(3deg);
+  transition: transform 0.3s ease;
+}
+
+.profile-container:hover .profile-avatar-circle {
+  transform: scale(1.05) rotate(-3deg);
+}
+
+.profile-avatar-section span {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.08em;
+}
+
+.profile-message {
+  text-align: center;
+  margin-top: 20px;
+  padding: 10px 14px;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  color: #065f46;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.9rem;
+  animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}

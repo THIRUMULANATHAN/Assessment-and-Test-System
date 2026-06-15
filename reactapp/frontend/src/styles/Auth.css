@@ -1,0 +1,286 @@
+/* Auth.css — Premium Authentication Views */
+
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+              radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+              #f1f5f9;
+  color: #0f172a;
+  padding: 20px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.auth-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 60px;
+  max-width: 960px;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Left column */
+.welcome-section {
+  flex: 1.2;
+  text-align: left;
+}
+
+.welcome-section h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2.5rem, 4vw, 3.8rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.welcome-section .quote {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  font-style: italic;
+  margin-bottom: 35px;
+  color: #475569;
+  position: relative;
+  padding-left: 20px;
+  border-left: 3px solid var(--primary);
+}
+
+/* Social links */
+.social-links {
+  display: flex;
+  gap: 16px;
+}
+
+.social-links a {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  color: #6366f1;
+  font-size: 1.3rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--shadow-sm);
+}
+
+.social-links a:hover {
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);
+  border-color: transparent;
+}
+
+/* Auth container */
+.auth-container {
+  flex: 1;
+  max-width: 420px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  color: #334155;
+  padding: 40px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.auth-container:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.16);
+  border-color: rgba(99, 102, 241, 0.15);
+}
+
+.auth-container h2 {
+  font-family: 'Outfit', sans-serif;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Input wrapper */
+.input-icon {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  background: #f8fafc;
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  border: 1.5px solid #e2e8f0;
+  transition: all 0.25s ease;
+}
+
+/* Focus-within allows us to highlight the box when input is active */
+.input-icon:focus-within {
+  background: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--input-focus-shadow), var(--shadow-sm);
+}
+
+/* Icons */
+.input-icon .icon {
+  font-size: 1.15rem;
+  color: #94a3b8;
+  transition: color 0.25s ease;
+  flex-shrink: 0;
+}
+
+.input-icon:focus-within .icon {
+  color: var(--primary);
+}
+
+/* Input fields */
+.input-icon input {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #0f172a;
+  font-family: inherit;
+}
+
+.input-icon input::placeholder {
+  color: #94a3b8;
+}
+
+/* Submit button */
+.auth-container button {
+  width: 100%;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.auth-container button:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+}
+
+.auth-container button:active {
+  transform: translateY(1px);
+}
+
+/* Register/Login link */
+.register-link {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.register-link a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+  margin-left: 4px;
+}
+
+.register-link a:hover {
+  color: var(--primary-600);
+  text-decoration: underline;
+}
+
+/* Role selection (radio buttons as pill tabs) */
+.select-wrapper {
+  display: flex;
+  justify-content: space-between;
+  background: #f1f5f9;
+  padding: 6px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  border: 1px solid #e2e8f0;
+  gap: 6px;
+}
+
+.role-option {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 8px;
+  padding: 8px 4px;
+}
+
+.role-option input {
+  display: none;
+}
+
+.role-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.25s ease;
+}
+
+.role-option:has(input:checked) {
+  background: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+.role-option:has(input:checked) .role-label {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.role-option:hover:not(:has(input:checked)) {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .auth-wrapper {
+    flex-direction: column;
+    gap: 40px;
+    text-align: center;
+  }
+
+  .welcome-section {
+    text-align: center;
+  }
+  
+  .welcome-section .quote {
+    border-left: none;
+    padding-left: 0;
+  }
+
+  .social-links {
+    justify-content: center;
+  }
+
+  .select-wrapper {
+    flex-direction: row;
+  }
+}

@@ -1,0 +1,163 @@
+/* Users.css — Premium User Management Workspace */
+
+.user-container {
+  max-width: 960px;
+  margin: 20px auto;
+  padding: 32px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: var(--radius);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+  color: #0f172a;
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.user-container h2 {
+  font-family: 'Outfit', sans-serif;
+  text-align: center;
+  font-size: 2.2rem;
+  margin-bottom: 30px;
+  color: #0f172a;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.no-users {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-top: 30px;
+  padding: 40px;
+}
+
+/* =========================
+   TABLE STYLING
+   ========================= */
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid #cbd5e1;
+}
+
+.user-table thead {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #ffffff;
+  text-align: left;
+}
+
+.user-table th {
+  padding: 16px 20px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.user-table td {
+  padding: 18px 20px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+  font-size: 0.95rem;
+  font-weight: 500;
+  vertical-align: middle;
+}
+
+.user-table tbody tr {
+  background: #ffffff;
+  transition: background-color 0.2s;
+}
+
+.user-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.user-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* =========================
+   ROLES
+   ========================= */
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: 99px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.role-admin {
+  background: rgba(139, 92, 246, 0.1);
+  color: var(--accent);
+  border: 1px solid rgba(139, 92, 246, 0.15);
+}
+
+.role-teacher {
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--primary);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+}
+
+.role-student {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success);
+  border: 1px solid rgba(16, 185, 129, 0.15);
+}
+
+/* =========================
+   BUTTONS
+   ========================= */
+.delete-button {
+  background: #fee2e2;
+  color: var(--danger);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.88rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: none;
+}
+
+.delete-button:hover {
+  background: var(--danger);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.delete-button:active {
+  transform: translateY(1px);
+}
+
+/* =========================
+   RESPONSIVE DESIGN
+   ========================= */
+@media (max-width: 768px) {
+  .user-container {
+    padding: 24px 16px;
+  }
+
+  .user-table th,
+  .user-table td {
+    padding: 12px 14px;
+    font-size: 0.88rem;
+  }
+
+  .delete-button {
+    padding: 6px 12px;
+    font-size: 0.82rem;
+  }
+}
