@@ -37,55 +37,22 @@ app.use(morgan("dev"));
 // CORS Configuration
 // ==========================
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:5174",
-  "http://127.0.0.1:5173",
-  "http://127.0.0.1:5174",
-  "https://assessment-and-test-system.vercel.app",
-];
-
-
 app.use(
   cors({
-    origin: function (origin, callback) {
-
-      // Postman/mobile apps
-      if (!origin) {
-        return callback(null, true);
-      }
-
-      // allow production + preview vercel urls
-      if (
-        allowedOrigins.includes(origin) ||
-        origin.endsWith(".vercel.app")
-      ) {
-        return callback(null, true);
-      }
-
-      return callback(
-        new Error(
-          `Blocked by CORS: ${origin}`
-        )
-      );
-    },
-
-
+    origin: true,
+    credentials: true,
     methods: [
       "GET",
       "POST",
       "PUT",
       "PATCH",
       "DELETE",
-      "OPTIONS",
+      "OPTIONS"
     ],
-
     allowedHeaders: [
       "Content-Type",
-      "Authorization",
-    ],
-
-    credentials: true,
+      "Authorization"
+    ]
   })
 );
 
