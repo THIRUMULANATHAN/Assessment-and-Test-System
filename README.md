@@ -2,9 +2,9 @@
 
 <div align="center">
 
-### Advanced AI-Ready Online Examination Platform with Automated Proctoring
+### Advanced Online Examination Platform with Cloud Proctoring
 
-A full-stack MERN assessment portal that enables secure online exams with webcam monitoring, tab-switch detection, automated violation tracking, analytics dashboards, and email-based proctoring reports.
+A full-stack MERN assessment portal featuring secure online exams, webcam monitoring, screen recording, tab-switch detection, violation tracking, Cloudinary video storage, analytics dashboard, and automated teacher proctor reports.
 
 <br/>
 
@@ -17,16 +17,20 @@ https://assessment-and-test-system.vercel.app/
 
 ## 📸 Application Preview
 
-### Authentication System
+
+### Authentication
+
 ![Register](screenshots/01Register.png)
 
 ![Login](screenshots/02Login.png)
 
+
 ---
 
-### Student Dashboard
+### Dashboard
 
 ![Dashboard](screenshots/03Dashboard.png)
+
 
 ---
 
@@ -34,176 +38,210 @@ https://assessment-and-test-system.vercel.app/
 
 ![Quiz Library](screenshots/04QuizLibrary.png)
 
+
 ---
 
-### Secure Proctored Assessment
+### Protected Assessment Mode
 
-![Protected Mode](screenshots/05Protcted.png)
+![Protected](screenshots/05Protcted.png)
 
-### Camera + Screen Monitoring
+
+---
+
+### Webcam + Screen Recording
 
 ![Recording](screenshots/06Screen_Cam-Recordings.png)
 
-### Violation Detection
+
+---
+
+### Violation Warning System
 
 ![Warning](screenshots/07Warning.png)
 
----
-
-### Automated Email Reports
-
-![Mail Report](screenshots/08mail1.png)
-
-![Mail Attachment](screenshots/09mail2.png)
 
 ---
 
-### Teacher Quiz Builder
+### Proctor Reports
 
-![Teacher Panel](screenshots/10teacher_set_question.png)
+![Report](screenshots/08report1.png)
+
+![Report Details](screenshots/09report2.png)
 
 
 ---
+
+### Teacher Quiz Management
+
+![Teacher Question Setup](screenshots/10teacher_set_question.png)
+
+
+---
+
 
 # 🚀 Features
 
+
 ## 👨‍🎓 Student Module
 
-- Secure student authentication
-- Browse available assessments
-- Attempt quizzes with timer control
-- Instant practice mode validation
-- Score and accuracy tracking
-- Personal performance dashboard
+- Secure JWT authentication
+- Browse quiz library
+- Practice assessments
+- Protected assessments
+- Timer based exams
+- Real-time score calculation
+- Performance dashboard
 
 
 ---
 
-## 🛡️ Automated Proctoring System
 
-The platform implements browser-level examination security.
-
-### Security Checks
-
-✔ Webcam permission validation  
-✔ Screen monitoring initialization  
-✔ Fullscreen enforcement  
-✔ Browser tab switching detection  
-✔ Window minimize detection  
-✔ Violation warning system  
+# 🛡️ Cloud Proctoring System
 
 
-### Recording Workflow
+ATS implements browser-based exam monitoring.
 
-```
-Camera Stream
-      ↓
+
+## Security Features
+
+
+✔ Webcam access verification  
+✔ Screen sharing validation  
+✔ Fullscreen monitoring  
+✔ Tab switch detection  
+✔ Window focus tracking  
+✔ Automatic violation counting  
+✔ Teacher report generation  
+
+
+---
+
+
+# 🎥 Recording Architecture
+
+
+Old approach:
+
+❌ Base64 videos stored directly in MongoDB
+
+
+Problem:
+
+- MongoDB document size increased
+- 16MB BSON limit issues
+- Slow report loading
+
+
+---
+
+
+## New Cloudinary Architecture
+
+
+```text
+
+Student Exam
+      |
+      |
 MediaRecorder API
-      ↓
-Video Blob Generation
-      ↓
-Backend Processing
-      ↓
-WEBM Storage
-      ↓
-Email Delivery
-```
-
----
-
-# 👨‍🏫 Teacher/Admin Module
-
-### Assessment Management
-
-- Create MCQ assessments
-- Configure:
-  - Difficulty
-  - Duration
-  - Protected / Practice Mode
-- Publish quizzes
-- Remove assessments
-
-
-### Analytics Dashboard
-
-Tracks:
-
-- Total users
-- Total quizzes
-- Attempts
-- Average scores
-- Accuracy percentage
-- Student-wise reports
-
-
----
-
-# 🧠 Major Engineering Problem Solved
-
-
-## MongoDB 16MB BSON Limit Optimization
-
-
-### Problem
-
-Initially webcam recordings were stored directly as Base64 strings inside MongoDB.
-
-This caused:
-
-- Huge document sizes
-- Database failures
-- Slow queries
-- BSON limit exceptions
-
-
-### Solution Implemented
-
-Redesigned storage architecture:
-
-```
-Frontend Recording
-        |
-        |
-        V
+      |
+      |
+WEBM Blob
+      |
+      |
+Base64 Transfer
+      |
+      |
 Express Backend
-        |
-        |
- Decode Base64
-        |
-        |
- Save .webm File
-        |
-        |
- Store File URL in MongoDB
+      |
+      |
+Cloudinary Upload
+      |
+      |
+Secure Video URL
+      |
+      |
+MongoDB Result Document
+      |
+      |
+Teacher Report Dashboard
+
 ```
+
 
 ### Result
 
-🔥 Reduced database documents from MB size to KB size  
-🔥 Faster report loading  
-🔥 Scalable proctoring storage  
+
+🔥 No MongoDB storage overload  
+🔥 Unlimited scalable video storage  
+🔥 Fast report loading  
+🔥 Secure Cloudinary playback links  
 
 
 ---
 
-# 🏗️ System Architecture
+
+# 👨‍🏫 Teacher Module
+
+
+Teachers can:
+
+
+- Create MCQ assessments
+- Select difficulty
+- Configure duration
+- Enable protected mode
+- View student results
+- Check violations
+- Watch webcam recordings
+- Watch screen recordings
+
+
+---
+
+
+# 📊 Analytics
+
+
+Tracks:
+
+
+- Total quizzes
+- Student attempts
+- Average score
+- Accuracy
+- Protected exam violations
+- Recording evidence
+
+
+---
+
+
+# 🏗️ Architecture
 
 
 ```mermaid
 graph TD
 
-A[React Frontend] -->|JWT API Requests| B[Express Server]
+A[React + Vite Frontend]
 
-B --> C[(MongoDB)]
+A -->|JWT API| B[Express Backend]
 
-B --> D[Video File Storage]
+B --> C[(MongoDB Atlas)]
 
-B --> E[Nodemailer SMTP]
+B --> D[Cloudinary Video Storage]
 
-E --> F[Teacher Email Report]
+D --> E[Recording URLs]
+
+E --> C
+
+B --> F[Teacher Reports]
+
 ```
 
+
 ---
+
 
 # 🛠️ Tech Stack
 
@@ -211,172 +249,204 @@ E --> F[Teacher Email Report]
 | Layer | Technology |
 |-|-|
 | Frontend | React + Vite |
-| Styling | CSS3 |
+| Styling | CSS |
 | Routing | React Router |
-| API Handling | Axios |
-| Backend | Node.js + Express.js |
-| Database | MongoDB + Mongoose |
-| Authentication | JWT |
-| Video Capture | MediaRecorder API |
-| Email Service | Nodemailer SMTP |
-| Deployment | Vercel |
+| API | Axios |
+| Backend | Node.js + Express |
+| Database | MongoDB Atlas |
+| ORM | Mongoose |
+| Auth | JWT |
+| Recording | MediaRecorder API |
+| Video Storage | Cloudinary |
+| Deployment Frontend | Vercel |
+| Deployment Backend | Render |
 
 
 ---
 
-# 📂 Folder Structure
+
+# 📂 Project Structure
 
 
 ```text
+
 ATS
-│
+
 ├── nodeapp
+│   |
+│   ├── config
+│   │    └── cloudinary.js
+│   |
 │   ├── controllers
-│   ├── middleware
 │   ├── models
 │   ├── routes
-│   ├── uploads
 │   └── index.js
 │
+
 ├── reactapp
+│
 │   └── frontend
-│       ├── src
-│       │   ├── api
-│       │   ├── components
-│       │   ├── context
-│       │   └── pages
-│       │
-│       └── vite.config.js
 │
+│       └── src
+│
+│          ├── api
+│          ├── components
+│          └── styles
+│
+
 ├── screenshots
-│
+
 └── README.md
+
+
 ```
+
 
 ---
 
-# ⚙️ Local Installation
+
+# ⚙️ Environment Variables
 
 
-Clone repository:
+Backend `.env`
 
-```bash
-git clone https://github.com/THIRUMULANATHAN/Assessment-and-Test-System.git
 
-cd Assessment-and-Test-System
+```env
+
+PORT=8080
+
+MONGO_URI=your_mongodb_url
+
+JWT_SECRET=your_secret
+
+
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+
+CLOUDINARY_API_KEY=your_key
+
+CLOUDINARY_API_SECRET=your_secret
+
+
 ```
 
 
-## Backend Setup
+---
+
+
+# 🚀 Installation
+
+
+Clone:
+
+```bash
+
+git clone https://github.com/THIRUMULANATHAN/Assessment-and-Test-System.git
+
+cd Assessment-and-Test-System
+
+```
+
+
+Backend:
 
 
 ```bash
+
 cd nodeapp
 
 npm install
 
-npm run dev
+npm start
+
 ```
 
 
-Create `.env`:
-
-
-```env
-PORT=8080
-
-MONGO_URI=your_database_url
-
-JWT_SECRET=your_secret_key
-
-SMTP_USER=your_email
-
-SMTP_PASS=your_password
-```
-
-
----
-
-## Frontend Setup
+Frontend:
 
 
 ```bash
+
 cd reactapp/frontend
 
 npm install
 
 npm run dev
-```
 
-
-Application:
-
-```
-http://localhost:5173
 ```
 
 
 ---
 
-# 🔌 API Modules
+
+# 🔌 Main APIs
 
 
-## Authentication
+Authentication
 
-```
+```http
+
 POST /api/auth/register
 
 POST /api/auth/login
-```
-
-
-## Quiz
 
 ```
-GET    /api/quizzes
 
-POST   /api/quizzes
+
+Quiz
+
+```http
+
+GET /api/quizzes
+
+POST /api/quizzes
+
+POST /api/quizzes/:id/submit
 
 DELETE /api/quizzes/:id
 
-POST   /api/quizzes/:id/submit
 ```
 
 
-## Reports
+Reports
 
-```
+```http
+
 GET /api/quizzes/reports
 
 GET /api/users/stats
+
 ```
 
 
 ---
 
-# 📌 Future Enhancements
 
-- AI cheating behaviour analysis
-- Face recognition verification
-- Cloud video storage integration
-- Advanced ranking analytics
-- Question bank generation
+# 🔮 Future Improvements
+
+
+- AI suspicious behaviour detection
+- Face recognition login
+- Object detection during exams
+- Question generation using AI
+- Advanced analytics dashboard
 
 
 ---
 
+
 # 👤 Developer
+
 
 **Thirumulanathan V**
 
 Full Stack Developer  
-MERN + Spring Boot
 
-📧 Email:  
-thiru2005v@gmail.com
+MERN Stack + Spring Boot
+
 
 GitHub:  
 https://github.com/THIRUMULANATHAN
+
 
 LinkedIn:  
 https://www.linkedin.com/in/thirumulanathan/
@@ -384,4 +454,5 @@ https://www.linkedin.com/in/thirumulanathan/
 
 ---
 
-⭐ If you like this project, consider giving the repository a star!
+
+⭐ If this project helped you, consider starring the repository!
