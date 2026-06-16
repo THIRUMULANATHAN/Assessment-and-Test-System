@@ -318,31 +318,35 @@ contentType:mime
 
 
 
-const transporter =
-nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
 
-host: process.env.SMTP_HOST,
+  host: process.env.SMTP_HOST,
 
-port: Number(process.env.SMTP_PORT),
+  port: 587,
 
-secure: process.env.SMTP_SECURE === "true",
+  secure: false,
 
-auth: {
+  auth: {
 
-user: process.env.SMTP_USER,
+    user: process.env.SMTP_USER,
 
-pass: process.env.SMTP_PASS
+    pass: process.env.SMTP_PASS
 
-},
+  },
 
-connectionTimeout: 30000,
+  requireTLS: true,
 
-greetingTimeout: 30000,
+  tls: {
+    minVersion: "TLSv1.2"
+  },
 
-socketTimeout: 30000
+  connectionTimeout: 60000,
+
+  greetingTimeout: 60000,
+
+  socketTimeout: 60000
 
 });
-
 
 
 
