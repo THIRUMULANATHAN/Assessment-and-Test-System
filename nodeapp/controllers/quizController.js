@@ -2,6 +2,7 @@
 
 const nodemailer = require("nodemailer");
 const cloudinary = require("../config/cloudinary");
+const streamifier = require("streamifier");
 
 const { Quiz, Result } = require("../models/Quiz");
 const User = require("../models/User");
@@ -260,13 +261,7 @@ screenRecordingUrl
     socketTimeout: 10000
   });
 
-  console.log("📨 Sending using Brevo SMTP...");
-
-  console.log("SMTP TEST:", {
-    host: process.env.SMTP_HOST || "smtp-relay.brevo.com",
-    port: parseInt(process.env.SMTP_PORT || "587", 10),
-    secure: process.env.SMTP_SECURE === "true"
-  });
+  console.log("📨 Sending using Brevo SMTP");
 
   await transporter.sendMail({
     from: `"ATS Proctoring" <thiru2005v@gmail.com>`,
@@ -308,7 +303,37 @@ screenRecordingUrl
     `
   });
 
-  console.log("✅ Mail sent:", teacherEmail);
+  console.log("✅ Mail sent");
+};
+
+// Cloudinary Stream Upload Helper
+const uploadBase64Video = (base64Data, folder, publicId) => {
+  return new Promise((resolve, reject) => {
+    // Extract base64 payload from data URI if prefix exists
+    const base64Str = base64Data.includes(";base64,")
+      ? base64Data.split(";base64,")[1]
+      : base64Data;
+    
+    const buffer = Buffer.from(base64Str, "base64");
+
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        resource_type: "video",
+        folder: folder,
+        public_id: publicId,
+        overwrite: true
+      },
+      (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result.secure_url);
+        }
+      }
+    );
+
+    streamifier.createReadStream(buffer).pipe(uploadStream);
+  });
 };
 
 // Background proctoring uploader & emailer
@@ -326,38 +351,19 @@ const handleProtectedSubmission = async (
   try {
     let cameraUrl = "";
     let screenUrl = "";
+    const folder = `ATS-Proctoring/${quizTitle}/${studentEmail}`;
 
     // Upload camera recording if present
     if (cameraRecordingBase64 && cameraRecordingBase64.includes(";base64,")) {
-      console.log("📤 Uploading webcam recording to Cloudinary...");
-        const cameraUpload = await cloudinary.uploader.upload_large(
-        cameraRecordingBase64,
-        {
-            resource_type: "video",
-            folder: `ATS-Proctoring/${quizTitle}/${studentEmail}`,
-            public_id: "webcam",
-            overwrite: true,
-            chunk_size: 6000000
-        }
-        );
-      cameraUrl = cameraUpload.secure_url;
+      console.log("📤 Uploading webcam recording...");
+      cameraUrl = await uploadBase64Video(cameraRecordingBase64, folder, "webcam");
       console.log("✅ Webcam uploaded:", cameraUrl);
     }
 
     // Upload screen recording if present
     if (screenRecordingBase64 && screenRecordingBase64.includes(";base64,")) {
-      console.log("📤 Uploading screen recording to Cloudinary...");
-      const screenUpload = await cloudinary.uploader.upload_large(
-        screenRecordingBase64,
-        {
-            resource_type: "video",
-            folder: `ATS-Proctoring/${quizTitle}/${studentEmail}`,
-            public_id: "screen",
-            overwrite: true,
-            chunk_size: 6000000
-        }
-        );
-      screenUrl = screenUpload.secure_url;
+      console.log("📤 Uploading screen recording...");
+      screenUrl = await uploadBase64Video(screenRecordingBase64, folder, "screen");
       console.log("✅ Screen uploaded:", screenUrl);
     }
 
@@ -366,7 +372,7 @@ const handleProtectedSubmission = async (
       cameraRecording: cameraUrl,
       screenRecording: screenUrl
     });
-    console.log("✅ Result document updated with Cloudinary URLs:", resultId);
+    console.log("✅ Result updated");
 
     // Send email with Cloudinary links
     await sendProctoringEmail(
@@ -379,7 +385,6 @@ const handleProtectedSubmission = async (
       cameraUrl,
       screenUrl
     );
-    console.log("✅ Background proctoring flow completed successfully");
 
   } catch (error) {
     console.error("❌ Error in background proctoring flow:", error);

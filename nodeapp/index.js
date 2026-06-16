@@ -37,26 +37,15 @@ app.use(morgan("dev"));
 // CORS (OPEN)
 // ==========================
 
-app.use(
-  cors({
-    origin: true,
-    credentials: true,
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://assessment-and-test-system.vercel.app"
+  ],
+  credentials: true
+}));
 
-    methods: [
-      "GET",
-      "POST",
-      "PUT",
-      "PATCH",
-      "DELETE",
-      "OPTIONS",
-    ],
-
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-    ],
-  })
-);
+app.options("*", cors());
 
 
 // ==========================
