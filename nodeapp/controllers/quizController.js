@@ -681,9 +681,9 @@ date:r.date,
 
 tabSwitches: r.tabSwitches || 0,
 
-cameraRecording:"",
+cameraRecording: r.cameraRecording || "",
 
-screenRecording:"",
+screenRecording: r.screenRecording || "",
 
 isProtected: r.quiz?.isProtected || false
 
@@ -766,15 +766,9 @@ date:r.date,
 
 tabSwitches: r.tabSwitches || 0,
 
-cameraRecording:
-req.user?.username === "thiru2005v@gmail.com"
-? r.cameraRecording
-: "",
+cameraRecording: r.cameraRecording || "",
 
-screenRecording:
-req.user?.username === "thiru2005v@gmail.com"
-? r.screenRecording
-: "",
+screenRecording: r.screenRecording || "",
 
 isProtected: r.quiz?.isProtected || false
 
