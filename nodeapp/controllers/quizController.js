@@ -320,11 +320,11 @@ contentType:mime
 
 const transporter = nodemailer.createTransport({
 
-  host: process.env.SMTP_HOST,
+  host: process.env.SMTP_HOST || "smtp-relay.brevo.com",
 
-  port: 587,
+  port: parseInt(process.env.SMTP_PORT || "587", 10),
 
-  secure: false,
+  secure: process.env.SMTP_SECURE === "true",
 
   auth: {
 
@@ -340,11 +340,11 @@ const transporter = nodemailer.createTransport({
     minVersion: "TLSv1.2"
   },
 
-  connectionTimeout: 60000,
+  connectionTimeout: 10000,
 
-  greetingTimeout: 60000,
+  greetingTimeout: 10000,
 
-  socketTimeout: 60000
+  socketTimeout: 10000
 
 });
 
@@ -356,14 +356,12 @@ console.log(
 
 
 console.log("SMTP TEST:", {
-host:process.env.SMTP_HOST,
-port:process.env.SMTP_PORT,
-secure:process.env.SMTP_SECURE
+host: process.env.SMTP_HOST || "smtp-relay.brevo.com",
+port: parseInt(process.env.SMTP_PORT || "587", 10),
+secure: process.env.SMTP_SECURE === "true"
 });
 
-await transporter.verify();
 
-console.log("✅ Brevo SMTP connected");
 await transporter.sendMail({
 
 
