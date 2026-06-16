@@ -330,12 +330,16 @@ const handleProtectedSubmission = async (
     // Upload camera recording if present
     if (cameraRecordingBase64 && cameraRecordingBase64.includes(";base64,")) {
       console.log("📤 Uploading webcam recording to Cloudinary...");
-      const cameraUpload = await cloudinary.uploader.upload(cameraRecordingBase64, {
-        resource_type: "video",
-        folder: `ATS-Proctoring/${quizTitle}/${studentEmail}`,
-        public_id: "webcam",
-        overwrite: true
-      });
+        const cameraUpload = await cloudinary.uploader.upload_large(
+        cameraRecordingBase64,
+        {
+            resource_type: "video",
+            folder: `ATS-Proctoring/${quizTitle}/${studentEmail}`,
+            public_id: "webcam",
+            overwrite: true,
+            chunk_size: 6000000
+        }
+        );
       cameraUrl = cameraUpload.secure_url;
       console.log("✅ Webcam uploaded:", cameraUrl);
     }
@@ -343,12 +347,16 @@ const handleProtectedSubmission = async (
     // Upload screen recording if present
     if (screenRecordingBase64 && screenRecordingBase64.includes(";base64,")) {
       console.log("📤 Uploading screen recording to Cloudinary...");
-      const screenUpload = await cloudinary.uploader.upload(screenRecordingBase64, {
-        resource_type: "video",
-        folder: `ATS-Proctoring/${quizTitle}/${studentEmail}`,
-        public_id: "screen",
-        overwrite: true
-      });
+      const screenUpload = await cloudinary.uploader.upload_large(
+        screenRecordingBase64,
+        {
+            resource_type: "video",
+            folder: `ATS-Proctoring/${quizTitle}/${studentEmail}`,
+            public_id: "screen",
+            overwrite: true,
+            chunk_size: 6000000
+        }
+        );
       screenUrl = screenUpload.secure_url;
       console.log("✅ Screen uploaded:", screenUrl);
     }
