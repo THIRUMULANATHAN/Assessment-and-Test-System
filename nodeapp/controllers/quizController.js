@@ -321,31 +321,25 @@ contentType:mime
 const transporter =
 nodemailer.createTransport({
 
+host: process.env.SMTP_HOST,
 
-host:process.env.SMTP_HOST,
+port: Number(process.env.SMTP_PORT),
 
+secure: process.env.SMTP_SECURE === "true",
 
-port:Number(
-process.env.SMTP_PORT
-),
+auth: {
 
+user: process.env.SMTP_USER,
 
-secure:false,
-
-
-auth:{
-
-user:
-process.env.SMTP_USER,
-
-
-pass:
-process.env.SMTP_PASS
+pass: process.env.SMTP_PASS
 
 },
-connectionTimeout:10000,
-greetingTimeout:10000,
-socketTimeout:10000
+
+connectionTimeout: 30000,
+
+greetingTimeout: 30000,
+
+socketTimeout: 30000
 
 });
 
@@ -357,12 +351,20 @@ console.log(
 );
 
 
+console.log("SMTP TEST:", {
+host:process.env.SMTP_HOST,
+port:process.env.SMTP_PORT,
+secure:process.env.SMTP_SECURE
+});
 
+await transporter.verify();
+
+console.log("✅ Brevo SMTP connected");
 await transporter.sendMail({
 
 
 from:
-`"ATS Proctoring" <${process.env.SMTP_USER}>`,
+`"ATS Proctoring" <thiru2005v@gmail.com>`,
 
 
 to:teacherEmail,
