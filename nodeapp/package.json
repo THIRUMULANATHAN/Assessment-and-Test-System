@@ -9,12 +9,14 @@
     "dev": "nodemon index.js",
     "seed": "node seeds/seedQuizzes.js",
     "seed:validate": "node seeds/seedQuizzes.js --validate",
-    "seed:reports": "node seeds/seedReports.js"
+    "seed:reports": "node seeds/seedReports.js",
+    "seed:java": "node seeds/seedJavaQuiz.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^3.0.2",
+    "cloudinary": "^2.10.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",

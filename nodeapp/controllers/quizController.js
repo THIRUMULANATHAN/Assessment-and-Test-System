@@ -1,6 +1,7 @@
 // nodeapp/controllers/quizController.js
 
 const nodemailer = require("nodemailer");
+const cloudinary = require("../config/cloudinary");
 
 const { Quiz, Result } = require("../models/Quiz");
 const User = require("../models/User");
@@ -237,202 +238,145 @@ quizTitle,
 score,
 totalMarks,
 violations,
-cameraRecording,
-screenRecording
+cameraRecordingUrl,
+screenRecordingUrl
 
 )=>{
 
-
-const attachments=[];
-
-
-
-// webcam attachment
-
-if(cameraRecording?.includes(";base64,")){
-
-
-const mime =
-cameraRecording.substring(
-5,
-cameraRecording.indexOf(";")
-);
-
-
-attachments.push({
-
-filename:"webcam.webm",
-
-content:Buffer.from(
-
-cameraRecording.split(";base64,")[1],
-
-"base64"
-
-),
-
-contentType:mime
-
-});
-
-
-}
-
-
-
-
-// screen attachment
-
-
-if(screenRecording?.includes(";base64,")){
-
-
-const mime =
-screenRecording.substring(
-5,
-screenRecording.indexOf(";")
-);
-
-
-
-attachments.push({
-
-filename:"screen.webm",
-
-content:Buffer.from(
-
-screenRecording.split(";base64,")[1],
-
-"base64"
-
-),
-
-contentType:mime
-
-
-});
-
-
-}
-
-
-
-
-const transporter = nodemailer.createTransport({
-
-  host: process.env.SMTP_HOST || "smtp-relay.brevo.com",
-
-  port: parseInt(process.env.SMTP_PORT || "587", 10),
-
-  secure: process.env.SMTP_SECURE === "true",
-
-  auth: {
-
-    user: process.env.SMTP_USER,
-
-    pass: process.env.SMTP_PASS
-
-  },
-
-  requireTLS: true,
-
-  tls: {
-    minVersion: "TLSv1.2"
-  },
-
-  connectionTimeout: 10000,
-
-  greetingTimeout: 10000,
-
-  socketTimeout: 10000
-
-});
-
-
-
-console.log(
-"📨 Sending using Brevo SMTP..."
-);
-
-
-console.log("SMTP TEST:", {
-host: process.env.SMTP_HOST || "smtp-relay.brevo.com",
-port: parseInt(process.env.SMTP_PORT || "587", 10),
-secure: process.env.SMTP_SECURE === "true"
-});
-
-
-await transporter.sendMail({
-
-
-from:
-`"ATS Proctoring" <thiru2005v@gmail.com>`,
-
-
-to:teacherEmail,
-
-
-subject:
-`ATS Proctor Report - ${quizTitle}`,
-
-
-html:`
-
-<h2>ATS Automated Proctor Report</h2>
-
-<table border="1" cellpadding="10">
-
-<tr>
-<td>Student</td>
-<td>${studentEmail}</td>
-</tr>
-
-
-<tr>
-<td>Quiz</td>
-<td>${quizTitle}</td>
-</tr>
-
-
-<tr>
-<td>Score</td>
-<td>${score}/${totalMarks}</td>
-</tr>
-
-
-<tr>
-<td>Tab Switches</td>
-<td>${violations}</td>
-</tr>
-
-
-</table>
-
-<p>
-Camera and screen recordings attached if available.
-</p>
-
-`,
-
-
-attachments
-
-
-});
-
-
-
-console.log(
-"✅ Mail sent:",
-teacherEmail
-);
-
-
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST || "smtp-relay.brevo.com",
+    port: parseInt(process.env.SMTP_PORT || "587", 10),
+    secure: process.env.SMTP_SECURE === "true",
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS
+    },
+    requireTLS: true,
+    tls: {
+      minVersion: "TLSv1.2"
+    },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 10000
+  });
+
+  console.log("📨 Sending using Brevo SMTP...");
+
+  console.log("SMTP TEST:", {
+    host: process.env.SMTP_HOST || "smtp-relay.brevo.com",
+    port: parseInt(process.env.SMTP_PORT || "587", 10),
+    secure: process.env.SMTP_SECURE === "true"
+  });
+
+  await transporter.sendMail({
+    from: `"ATS Proctoring" <thiru2005v@gmail.com>`,
+    to: teacherEmail,
+    subject: `ATS Proctor Report - ${quizTitle}`,
+    html: `
+      <h2>ATS Automated Proctor Report</h2>
+      <table border="1" cellpadding="10">
+        <tr>
+          <td>Student</td>
+          <td>${studentEmail}</td>
+        </tr>
+        <tr>
+          <td>Quiz</td>
+          <td>${quizTitle}</td>
+        </tr>
+        <tr>
+          <td>Score</td>
+          <td>${score}/${totalMarks}</td>
+        </tr>
+        <tr>
+          <td>Tab Switches</td>
+          <td>${violations}</td>
+        </tr>
+        ${cameraRecordingUrl ? `
+        <tr>
+          <td>Webcam Recording</td>
+          <td><a href="${cameraRecordingUrl}" target="_blank" rel="noopener noreferrer">View Webcam Link</a></td>
+        </tr>
+        ` : ''}
+        ${screenRecordingUrl ? `
+        <tr>
+          <td>Screen Recording</td>
+          <td><a href="${screenRecordingUrl}" target="_blank" rel="noopener noreferrer">View Screen Link</a></td>
+        </tr>
+        ` : ''}
+      </table>
+      <p>Proctoring recordings have been uploaded to Cloudinary. Click the links in the table above to view them.</p>
+    `
+  });
+
+  console.log("✅ Mail sent:", teacherEmail);
 };
 
+// Background proctoring uploader & emailer
+const handleProtectedSubmission = async (
+  resultId,
+  studentEmail,
+  teacherEmail,
+  quizTitle,
+  score,
+  totalMarks,
+  tabSwitches,
+  cameraRecordingBase64,
+  screenRecordingBase64
+) => {
+  try {
+    let cameraUrl = "";
+    let screenUrl = "";
 
+    // Upload camera recording if present
+    if (cameraRecordingBase64 && cameraRecordingBase64.includes(";base64,")) {
+      console.log("📤 Uploading webcam recording to Cloudinary...");
+      const cameraUpload = await cloudinary.uploader.upload(cameraRecordingBase64, {
+        resource_type: "video",
+        folder: `ATS-Proctoring/${quizTitle}/${studentEmail}`,
+        public_id: "webcam",
+        overwrite: true
+      });
+      cameraUrl = cameraUpload.secure_url;
+      console.log("✅ Webcam uploaded:", cameraUrl);
+    }
 
+    // Upload screen recording if present
+    if (screenRecordingBase64 && screenRecordingBase64.includes(";base64,")) {
+      console.log("📤 Uploading screen recording to Cloudinary...");
+      const screenUpload = await cloudinary.uploader.upload(screenRecordingBase64, {
+        resource_type: "video",
+        folder: `ATS-Proctoring/${quizTitle}/${studentEmail}`,
+        public_id: "screen",
+        overwrite: true
+      });
+      screenUrl = screenUpload.secure_url;
+      console.log("✅ Screen uploaded:", screenUrl);
+    }
 
+    // Save Cloudinary secure_url in MongoDB Result
+    await Result.findByIdAndUpdate(resultId, {
+      cameraRecording: cameraUrl,
+      screenRecording: screenUrl
+    });
+    console.log("✅ Result document updated with Cloudinary URLs:", resultId);
+
+    // Send email with Cloudinary links
+    await sendProctoringEmail(
+      studentEmail,
+      teacherEmail,
+      quizTitle,
+      score,
+      totalMarks,
+      tabSwitches,
+      cameraUrl,
+      screenUrl
+    );
+    console.log("✅ Background proctoring flow completed successfully");
+
+  } catch (error) {
+    console.error("❌ Error in background proctoring flow:", error);
+  }
+};
 
 
 
@@ -513,7 +457,7 @@ score++;
 
 
 
-await Result.create({
+const result = await Result.create({
 
 
 user:userId,
@@ -595,7 +539,9 @@ teacher?.username
 if(student && teacher){
 
 
-sendProctoringEmail(
+handleProtectedSubmission(
+
+result._id,
 
 student.username,
 
@@ -614,24 +560,7 @@ cameraRecording,
 screenRecording
 
 
-)
-
-.then(()=>{
-
-console.log(
-"✅ Brevo background mail completed"
 );
-
-})
-
-.catch(err=>{
-
-console.log(
-"❌ Brevo mail failed:",
-err.message
-);
-
-});
 
 
 }
@@ -713,7 +642,7 @@ user:user._id
 })
 .populate(
 "quiz",
-"title subject"
+"title subject isProtected"
 );
 
 
@@ -735,8 +664,15 @@ score:r.score,
 
 totalMarks:r.totalMarks,
 
-date:r.date
+date:r.date,
 
+tabSwitches: r.tabSwitches || 0,
+
+cameraRecording: r.cameraRecording || "",
+
+screenRecording: r.screenRecording || "",
+
+isProtected: r.quiz?.isProtected || false
 
 }))
 
@@ -776,7 +712,7 @@ await Result.find()
 )
 .populate(
 "quiz",
-"title subject"
+"title subject isProtected"
 );
 
 
@@ -813,7 +749,15 @@ score:r.score,
 
 totalMarks:r.totalMarks,
 
-date:r.date
+date:r.date,
+
+tabSwitches: r.tabSwitches || 0,
+
+cameraRecording: r.cameraRecording || "",
+
+screenRecording: r.screenRecording || "",
+
+isProtected: r.quiz?.isProtected || false
 
 
 });

@@ -326,7 +326,8 @@ const QuizReport = () => {
     const studentReports = reports[student];
     totalStudentSubmissions += studentReports.length;
     studentReports.forEach((r) => {
-      totalPctSum += getScorePercentage(r.score, r.totalMarks);
+      totalPctSum += getScorePercentage
+      (r.score, r.totalMarks);
     });
   });
 
@@ -499,26 +500,66 @@ const QuizReport = () => {
                         <table className="reports-table">
                           <thead>
                             <tr>
-                              <th>Quiz Title</th>
-                              <th>Subject</th>
-                              <th>Performance Meter</th>
-                              <th>Grade</th>
-                              <th>Completion Date</th>
+                              <th>Quiz</th>
+                              <th>Score</th>
+                              <th>Tab Switch Count</th>
+                              <th>Status</th>
+                              <th>Recordings</th>
                             </tr>
                           </thead>
                           <tbody>
                             {displayedReports.map((r, idx) => (
                               <tr key={r.id || idx}>
-                                <td style={{ fontWeight: 600, color: "#0f172a" }}>{r.quizTitle}</td>
-                                <td>
-                                  <span className="subject-tag">{r.subject}</span>
+                                <td style={{ fontWeight: 600, color: "#0f172a" }}>
+                                  {r.quizTitle}
+                                  <div style={{ fontSize: "0.75rem", color: "#64748b", fontWeight: "normal", marginTop: "2px" }}>
+                                    {r.subject} • {formatDate(r.date)}
+                                  </div>
                                 </td>
-                                <td>{getProgressBar(r.score, r.totalMarks)}</td>
-                                <td>{getScoreBadge(r.score, r.totalMarks)}</td>
+                                <td style={{ fontWeight: "bold" }}>
+                                  {r.score} / {r.totalMarks}
+                                </td>
+                                <td style={{ color: r.tabSwitches >= 3 ? "#dc2626" : "#334155", fontWeight: 600 }}>
+                                  {r.tabSwitches}
+                                </td>
                                 <td>
-                                  <span className="report-date">
-                                    <FaCalendarAlt /> {formatDate(r.date)}
-                                  </span>
+                                  {r.tabSwitches < 3 ? (
+                                    <span className="proctor-status-badge passed">Passed</span>
+                                  ) : (
+                                    <span className="proctor-status-badge suspicious">Suspicious</span>
+                                  )}
+                                </td>
+                                <td>
+                                  {r.isProtected ? (
+                                    <div className="proctoring-actions">
+                                      {r.cameraRecording ? (
+                                        <a
+                                          href={r.cameraRecording}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="action-btn webcam-btn"
+                                        >
+                                          📷 View Webcam
+                                        </a>
+                                      ) : (
+                                        <span className="no-recording-text">No Webcam</span>
+                                      )}
+                                      {r.screenRecording ? (
+                                        <a
+                                          href={r.screenRecording}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="action-btn screen-btn"
+                                        >
+                                          🖥 View Screen
+                                        </a>
+                                      ) : (
+                                        <span className="no-recording-text">No Screen</span>
+                                      )}
+                                    </div>
+                                  ) : (
+                                    <span className="unprotected-tag">Unprotected</span>
+                                  )}
                                 </td>
                               </tr>
                             ))}
